@@ -13,10 +13,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text gameOverScoreText;
     [SerializeField] private TMP_Text bombCountText;
     [SerializeField] private TMP_Text bombRangeText;
+    [SerializeField] private TMP_Text speedText;
 
     public void UpdateScore(int score)
     {
-        scoreText.text = $"Score: {score}";
+        scoreText.text = $"Sc: {score}";
     }
 
     public void UpdateGears(int gears)
@@ -48,12 +49,17 @@ public class UIManager : MonoBehaviour
 
     public void UpdateBombCount(int count)
     {
-        bombCountText.text = $"Bombs: {count}";
+        bombCountText.text = $"B: {count}";
     }
 
     public void UpdateBombRange(int range)
     {
-        bombRangeText.text = $"Range: {range}";
+        bombRangeText.text = $"R: {range}";
+    }
+
+    public void UpdateSpeed(float speed)
+    {
+        speedText.text = $"Sp: {speed}";
     }
 
 }

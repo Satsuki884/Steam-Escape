@@ -10,10 +10,16 @@ public class Bomb : MonoBehaviour
     private GameManager gameManager;
 
     private PlayerController owner;
+    private int bombRange = 1;
 
     public void SetOwner(PlayerController player)
     {
         owner = player;
+    }
+
+    public void SetBombRange(int range)
+    {
+        bombRange = range;
     }
 
     void Start()
@@ -35,25 +41,29 @@ public class Bomb : MonoBehaviour
         Vector2Int bombPos = Vector2Int.RoundToInt(transform.position);
         CreateExplosionAt(bombPos);
 
-        // Взрыв во все 4 стороны с дальностью 1
         Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
 
         foreach (var dir in directions)
         {
-            Vector2Int checkPos = bombPos + dir;
-
-            if (mapGen.IsIndestructible(checkPos))
+            for (int i = 1; i <= bombRange; i++)
             {
-                // Взрыв остановлен стеной
-                continue;
-            }
+                Vector2Int checkPos = bombPos + dir * i;
 
-            CreateExplosionAt(checkPos);
+                if (mapGen.IsIndestructible(checkPos))
+                {
+                    // Взрыв останавливается на несокрушимой стене
+                    break;
+                }
 
-            if (mapGen.IsDestructible(checkPos))
-            {
-                mapGen.DestroyBlock(checkPos);
-                gameManager.AddScore(50);
+                CreateExplosionAt(checkPos);
+
+                if (mapGen.IsDestructible(checkPos))
+                {
+                    mapGen.DestroyBlock(checkPos);
+                    gameManager.AddScore(50);
+                    // Взрыв не распространяется дальше за разрушимым блоком
+                    break;
+                }
             }
         }
 

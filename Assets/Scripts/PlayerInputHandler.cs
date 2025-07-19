@@ -6,10 +6,10 @@ public class PlayerInputHandler : MonoBehaviour
 {
     private PlayerController player;
     [Header("UI Buttons")]
-    [SerializeField] private Button buttonUp;
-    [SerializeField] private Button buttonDown;
-    [SerializeField] private Button buttonLeft;
-    [SerializeField] private Button buttonRight;
+    // [SerializeField] private Button buttonUp;
+    // [SerializeField] private Button buttonDown;
+    // [SerializeField] private Button buttonLeft;
+    // [SerializeField] private Button buttonRight;
     [SerializeField] private Button buttonBomb;
 
     void Start()
@@ -28,10 +28,10 @@ public class PlayerInputHandler : MonoBehaviour
         }
 
         // Когда нашли — подключаем кнопки
-        buttonUp.onClick.AddListener(() => player.SetMoveDirection(Vector2Int.up));
-        buttonDown.onClick.AddListener(() => player.SetMoveDirection(Vector2Int.down));
-        buttonLeft.onClick.AddListener(() => player.SetMoveDirection(Vector2Int.left));
-        buttonRight.onClick.AddListener(() => player.SetMoveDirection(Vector2Int.right));
+        // buttonUp.onClick.AddListener(() => player.SetMoveDirection(Vector2Int.up));
+        // buttonDown.onClick.AddListener(() => player.SetMoveDirection(Vector2Int.down));
+        // buttonLeft.onClick.AddListener(() => player.SetMoveDirection(Vector2Int.left));
+        // buttonRight.onClick.AddListener(() => player.SetMoveDirection(Vector2Int.right));
         buttonBomb.onClick.AddListener(() => player.TryPlaceBomb());
     }
 }

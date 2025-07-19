@@ -10,6 +10,8 @@ public class LevelGenerator : MonoBehaviour
     public GameObject destructibleBlockPrefab;
     public List<GameObject> bonusPrefabs;
     public GameObject playerPrefab;
+    private GameObject playerInstance;
+    private Vector2Int playerGridPosition;
     public GameObject gearPrefab;
     public GameObject exitPrefab;
     private Vector2Int exitPosition;
@@ -23,24 +25,43 @@ public class LevelGenerator : MonoBehaviour
 
     void Start()
     {
+        playerGridPosition = new Vector2Int(1, height - 2);
         GenerateMap();
     }
 
     public void GenerateMap()
     {
+        // Уничтожаем старую карту
         if (mapTiles != null)
         {
             foreach (var tile in mapTiles)
+            {
                 if (tile != null)
                     Destroy(tile);
+            }
         }
 
         mapTiles = new GameObject[width, height];
         destructiblePositions.Clear();
         hiddenObjects.Clear();
 
-        Vector2Int spawnPos = new Vector2Int(1, height - 2); // Верхний левый угол (внутри границ)
-        List<Vector2Int> blockedAroundSpawn = GetSurroundingPositions(spawnPos);
+        // Если игрок уже существует — сохраняем его текущую позицию
+        if (playerInstance != null)
+        {
+            PlayerController pc = playerInstance.GetComponent<PlayerController>();
+            if (pc != null)
+            {
+                playerGridPosition = pc.GetGridPosition();
+            }
+            else
+            {
+                // fallback на позицию по transform, если скрипта нет
+                Vector3 pos = playerInstance.transform.position;
+                playerGridPosition = Vector2Int.RoundToInt(new Vector2(pos.x, pos.y));
+            }
+        }
+
+        List<Vector2Int> blockedAroundPlayer = GetSurroundingPositions(playerGridPosition);
 
         for (int x = 0; x < width; x++)
         {
@@ -61,8 +82,8 @@ public class LevelGenerator : MonoBehaviour
                     continue;
                 }
 
-                // Пропускаем установку разрушаемых блоков в радиусе 1 от спавна
-                if (blockedAroundSpawn.Contains(currentPos))
+                // Не размещаем разрушаемые блоки вокруг игрока
+                if (blockedAroundPlayer.Contains(currentPos))
                     continue;
 
                 if (Random.value < 0.5f)
@@ -76,8 +97,13 @@ public class LevelGenerator : MonoBehaviour
         SpawnGearsAndBonuses();
         SpawnExit();
 
-        Instantiate(playerPrefab, new Vector3(spawnPos.x, spawnPos.y, 0), Quaternion.identity);
+        // Только при первом запуске создаем игрока
+        if (playerInstance == null)
+        {
+            playerInstance = Instantiate(playerPrefab, new Vector3(playerGridPosition.x, playerGridPosition.y, 0), Quaternion.identity);
+        }
     }
+
 
     List<Vector2Int> GetSurroundingPositions(Vector2Int center)
     {

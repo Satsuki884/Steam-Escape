@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -15,76 +16,66 @@ public class PlayerController : MonoBehaviour
     private LevelGenerator mapGen;
     private GameManager gameManager;
 
-    private Rigidbody2D rb;
-
-    private Vector2 movement;
+    // private Vector2 movement;
 
     void Start()
     {
+
         currentLives = maxLives;
         mapGen = FindObjectOfType<LevelGenerator>();
         gameManager = FindObjectOfType<GameManager>();
-        rb = GetComponent<Rigidbody2D>();
-
+        ResetPlayerState();
         gridPosition = Vector2Int.RoundToInt(transform.position);
         transform.position = new Vector3(gridPosition.x, gridPosition.y, 0);
+        usingUIInput = true;
     }
+
+    private bool usingUIInput = false;
 
     void Update()
     {
-        // HandleInput();
-        HandleKeyboardInput();
-
-        if (bombRequested)
+        if (!isMoving && moveDirection != Vector2Int.zero)
         {
-            PlaceBomb();
-            bombRequested = false;
-        }
-    }
-    // void FixedUpdate()
-    // {
-    //     if (movement != Vector2.zero)
-    //         Move(movement);
-    // }
-    void FixedUpdate()
-    {
-        if (pendingInput != Vector2Int.zero)
-        {
-            Move(pendingInput);
-            pendingInput = Vector2Int.zero;
+            TryMove(moveDirection);
         }
     }
 
-    void HandleKeyboardInput()
+    void TryMove(Vector2Int dir)
     {
-        if (Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
+        Vector2Int targetPos = gridPosition + dir;
+
+        if (mapGen.IsIndestructible(targetPos) || mapGen.IsDestructible(targetPos))
         {
-            bombRequested = true;
-        }
-
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
-            pendingInput = Vector2Int.up;
-        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-            pendingInput = Vector2Int.down;
-        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-            pendingInput = Vector2Int.left;
-        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-            pendingInput = Vector2Int.right;
-    }
-
-    void Move(Vector2 dir)
-    {
-        Vector2Int targetPos = gridPosition + Vector2Int.RoundToInt(dir);
-
-        // Проверяем коллизию с неразрушаемыми стенами
-        if (mapGen.IsIndestructible(targetPos))
             return;
+        }
 
-        gridPosition = targetPos;
-        transform.position = new Vector3(gridPosition.x, gridPosition.y, 0);
+        StartCoroutine(MoveSmoothly(targetPos));
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    IEnumerator MoveSmoothly(Vector2Int targetGridPos)
+    {
+        isMoving = true;
+
+        Vector3 startPos = transform.position;
+        Vector3 endPos = new Vector3(targetGridPos.x, targetGridPos.y, 0);
+        float t = 0;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime * moveSpeed;
+            transform.position = Vector3.Lerp(startPos, endPos, t);
+            yield return null;
+        }
+
+        gridPosition = targetGridPos;
+        transform.position = endPos;
+
+        isMoving = false;
+    }
+    private bool isMoving = false;
+    private Vector2Int moveDirection = Vector2Int.zero;
+
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Explosion") || other.CompareTag("Enemy"))
         {
@@ -102,6 +93,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (other.CompareTag("Exit"))
         {
+            Destroy(other.gameObject);
             gameManager.OnPlayerFoundExit();
         }
     }
@@ -136,8 +128,10 @@ public class PlayerController : MonoBehaviour
 
         Bomb bombScript = bombObj.GetComponent<Bomb>();
         if (bombScript != null)
-            bombScript.SetOwner(this); // Привязываем владельца
-
+        {
+            bombScript.SetOwner(this);
+            bombScript.SetBombRange(bombRange);  // передаём радиус сюда
+        }
         currentActiveBombs++;
     }
 
@@ -152,18 +146,44 @@ public class PlayerController : MonoBehaviour
         maxActiveBombs += amount;
     }
 
-    // Методы для UI-кнопок
-    private Vector2Int pendingInput = Vector2Int.zero;
-    private bool bombRequested = false;
-
     public void SetMoveDirection(Vector2Int dir)
     {
-        pendingInput = dir;
+        moveDirection = dir;
     }
+
+    public void SetUsingUIInput(bool value)
+    {
+        usingUIInput = value;
+    }
+
 
     public void TryPlaceBomb()
     {
-        bombRequested = true;
+        if (currentActiveBombs < maxActiveBombs)
+        {
+            PlaceBomb();
+        }
     }
+
+    public Vector2Int GetGridPosition()
+    {
+        return gridPosition;
+    }
+
+    public void ResetPlayerState()
+    {
+        currentLives = maxLives = 3;
+        moveSpeed = 2f;
+        bombRange = 1;
+        maxActiveBombs = 1;
+        currentActiveBombs = 0;
+        gameManager.ResetScore();      // Обнулим очки
+        gameManager.ResetGears();      // Обнулим шестерёнки
+
+        gridPosition = Vector2Int.RoundToInt(transform.position);
+        transform.position = new Vector3(gridPosition.x, gridPosition.y, 0);
+        moveDirection = Vector2Int.zero;
+    }
+
 
 }
