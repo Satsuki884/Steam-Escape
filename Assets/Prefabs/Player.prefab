@@ -47,10 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17659a843e118cc449c51e1ea5803ba1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxLives: 15
+  maxLives: 3
   moveSpeed: 2
   bombPrefab: {fileID: 839910339006828853, guid: 38b78e9654d373340beaa193289b870a, type: 3}
-  bombRange: 4
+  bombRange: 1
   maxActiveBombs: 1
 --- !u!65 &3388309880395552437
 BoxCollider:

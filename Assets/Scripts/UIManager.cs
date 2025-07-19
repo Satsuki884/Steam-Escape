@@ -17,12 +17,12 @@ public class UIManager : MonoBehaviour
 
     public void UpdateScore(int score)
     {
-        scoreText.text = $"Sc: {score}";
+        scoreText.text = $"Score: {score}";
     }
 
     public void UpdateGears(int gears)
     {
-        gearsText.text = $"G: {gears}";
+        gearsText.text = $"Gears: {gears}";
     }
 
     public void UpdateTimer(float time)
@@ -32,12 +32,12 @@ public class UIManager : MonoBehaviour
 
     public void UpdateLives(int lives)
     {
-        livesText.text = $"L: {lives}";
+        livesText.text = $"Lives: {lives}";
     }
 
     public void UpdateEnemiesCount(int count)
     {
-        enemiesText.text = $"E: {count}";
+        enemiesText.text = $"Enemies: {count}";
     }
 
     public void ShowGameOver(int score)
@@ -49,17 +49,17 @@ public class UIManager : MonoBehaviour
 
     public void UpdateBombCount(int count)
     {
-        bombCountText.text = $"B: {count}";
+        bombCountText.text = $"Bombs: {count}";
     }
 
     public void UpdateBombRange(int range)
     {
-        bombRangeText.text = $"R: {range}";
+        bombRangeText.text = $"Range: {range}";
     }
 
     public void UpdateSpeed(float speed)
     {
-        speedText.text = $"Sp: {speed}";
+        speedText.text = $"Speed: {speed}";
     }
 
 }
