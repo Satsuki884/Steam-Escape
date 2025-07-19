@@ -37,41 +37,70 @@ public class LevelGenerator : MonoBehaviour
 
         mapTiles = new GameObject[width, height];
         destructiblePositions.Clear();
+        hiddenObjects.Clear();
+
+        Vector2Int spawnPos = new Vector2Int(1, height - 2); // Верхний левый угол (внутри границ)
+        List<Vector2Int> blockedAroundSpawn = GetSurroundingPositions(spawnPos);
 
         for (int x = 0; x < width; x++)
+        {
             for (int y = 0; y < height; y++)
             {
+                Vector2Int currentPos = new Vector2Int(x, y);
                 Vector3 pos = new Vector3(x, y, 0);
-                // Границы карты — неразрушаемые стены
+
                 if (x == 0 || y == 0 || x == width - 1 || y == height - 1)
                 {
                     mapTiles[x, y] = Instantiate(indestructibleWallPrefab, pos, Quaternion.identity, transform);
                     continue;
                 }
 
-                // Чередуем стены по сетке для лабиринта
                 if (x % 2 == 0 && y % 2 == 0)
                 {
                     mapTiles[x, y] = Instantiate(indestructibleWallPrefab, pos, Quaternion.identity, transform);
                     continue;
                 }
 
-                // Рандомно ставим разрушаемые блоки с вероятностью 50%
+                // Пропускаем установку разрушаемых блоков в радиусе 1 от спавна
+                if (blockedAroundSpawn.Contains(currentPos))
+                    continue;
+
                 if (Random.value < 0.5f)
                 {
                     mapTiles[x, y] = Instantiate(destructibleBlockPrefab, pos, Quaternion.identity, transform);
-                    destructiblePositions.Add(new Vector2Int(x, y));
+                    destructiblePositions.Add(currentPos);
                 }
             }
+        }
 
         SpawnGearsAndBonuses();
-
         SpawnExit();
 
-        Vector2Int spawnPos = new Vector2Int(1, height - 2); // Верхний левый угол (внутри границ)
         Instantiate(playerPrefab, new Vector3(spawnPos.x, spawnPos.y, 0), Quaternion.identity);
-
     }
+
+    List<Vector2Int> GetSurroundingPositions(Vector2Int center)
+    {
+        List<Vector2Int> positions = new List<Vector2Int>();
+
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            for (int dy = -1; dy <= 1; dy++)
+            {
+                int nx = center.x + dx;
+                int ny = center.y + dy;
+
+                if (nx >= 0 && nx < width && ny >= 0 && ny < height)
+                {
+                    positions.Add(new Vector2Int(nx, ny));
+                }
+            }
+        }
+
+        return positions;
+    }
+
+
 
     void SpawnGearsAndBonuses()
     {

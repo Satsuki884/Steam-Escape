@@ -54,3 +54,5 @@ crashlytics-build.properties
 
 # Windows
 Thumbs.db
+/Assets/TextMesh Pro
+Assets/TextMesh Pro.meta

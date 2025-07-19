@@ -37,6 +37,8 @@ public class GameManager : MonoBehaviour
         {
             GameOver();
         }
+
+        UpdateBombStatsUI();
     }
 
     void CountEnemies()
@@ -127,5 +129,15 @@ public class GameManager : MonoBehaviour
         uiManager.UpdateGears(gears);
         uiManager.UpdateEnemiesCount(enemiesCount);
         uiManager.UpdateLives(FindObjectOfType<PlayerController>().maxLives);
+    }
+
+    void UpdateBombStatsUI()
+    {
+        var player = FindObjectOfType<PlayerController>();
+        if (player != null)
+        {
+            uiManager.UpdateBombCount(player.maxActiveBombs);
+            uiManager.UpdateBombRange(player.bombRange);
+        }
     }
 }

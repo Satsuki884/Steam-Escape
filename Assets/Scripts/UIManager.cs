@@ -1,16 +1,18 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    public TMP_Text scoreText;
-    public TMP_Text gearsText;
-    public TMP_Text timerText;
-    public TMP_Text livesText;
-    public TMP_Text enemiesText;
-
-    public GameObject gameOverPanel;
-    public TMP_Text gameOverScoreText;
+    [SerializeField] private TMP_Text scoreText;
+    [SerializeField] private TMP_Text gearsText;
+    [SerializeField] private TMP_Text timerText;
+    [SerializeField] private TMP_Text livesText;
+    [SerializeField] private TMP_Text enemiesText;
+    [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private TMP_Text gameOverScoreText;
+    [SerializeField] private TMP_Text bombCountText;
+    [SerializeField] private TMP_Text bombRangeText;
 
     public void UpdateScore(int score)
     {
@@ -19,7 +21,7 @@ public class UIManager : MonoBehaviour
 
     public void UpdateGears(int gears)
     {
-        gearsText.text = $"Gears: {gears}";
+        gearsText.text = $"G: {gears}";
     }
 
     public void UpdateTimer(float time)
@@ -29,17 +31,29 @@ public class UIManager : MonoBehaviour
 
     public void UpdateLives(int lives)
     {
-        livesText.text = $"Lives: {lives}";
+        livesText.text = $"L: {lives}";
     }
 
     public void UpdateEnemiesCount(int count)
     {
-        enemiesText.text = $"Enemies: {count}";
+        enemiesText.text = $"E: {count}";
     }
 
     public void ShowGameOver(int score)
     {
+        Time.timeScale = 0;
         gameOverPanel.SetActive(true);
         gameOverScoreText.text = $"Game Over\nScore: {score}";
     }
+
+    public void UpdateBombCount(int count)
+    {
+        bombCountText.text = $"Bombs: {count}";
+    }
+
+    public void UpdateBombRange(int range)
+    {
+        bombRangeText.text = $"Range: {range}";
+    }
+
 }

@@ -9,6 +9,13 @@ public class Bomb : MonoBehaviour
     private LevelGenerator mapGen;
     private GameManager gameManager;
 
+    private PlayerController owner;
+
+    public void SetOwner(PlayerController player)
+    {
+        owner = player;
+    }
+
     void Start()
     {
         mapGen = FindObjectOfType<LevelGenerator>();
@@ -49,6 +56,9 @@ public class Bomb : MonoBehaviour
                 gameManager.AddScore(50);
             }
         }
+
+        if (owner != null)
+            owner.OnBombExploded();
 
         Destroy(gameObject);
     }

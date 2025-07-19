@@ -32,32 +32,44 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        HandleInput();
-    }
+        // HandleInput();
+        HandleKeyboardInput();
 
-    void HandleInput()
-    {
-        movement = Vector2.zero;
-
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (bombRequested)
         {
             PlaceBomb();
+            bombRequested = false;
         }
-
-        if (Input.GetKey(KeyCode.UpArrow))
-            movement = Vector2.up;
-        else if (Input.GetKey(KeyCode.DownArrow))
-            movement = Vector2.down;
-        else if (Input.GetKey(KeyCode.LeftArrow))
-            movement = Vector2.left;
-        else if (Input.GetKey(KeyCode.RightArrow))
-            movement = Vector2.right;
     }
-
+    // void FixedUpdate()
+    // {
+    //     if (movement != Vector2.zero)
+    //         Move(movement);
+    // }
     void FixedUpdate()
     {
-        if (movement != Vector2.zero)
-            Move(movement);
+        if (pendingInput != Vector2Int.zero)
+        {
+            Move(pendingInput);
+            pendingInput = Vector2Int.zero;
+        }
+    }
+
+    void HandleKeyboardInput()
+    {
+        if (Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
+        {
+            bombRequested = true;
+        }
+
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+            pendingInput = Vector2Int.up;
+        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+            pendingInput = Vector2Int.down;
+        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            pendingInput = Vector2Int.left;
+        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            pendingInput = Vector2Int.right;
     }
 
     void Move(Vector2 dir)
@@ -72,18 +84,9 @@ public class PlayerController : MonoBehaviour
         transform.position = new Vector3(gridPosition.x, gridPosition.y, 0);
     }
 
-    void PlaceBomb()
-    {
-        Instantiate(bombPrefab, transform.position, Quaternion.identity);
-    }
-
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Explosion"))
-        {
-            TakeDamage();
-        }
-        else if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Explosion") || other.CompareTag("Enemy"))
         {
             TakeDamage();
         }
@@ -119,4 +122,48 @@ public class PlayerController : MonoBehaviour
             // И телепортировать игрока на старт, например
         }
     }
+    public int maxActiveBombs = 1;
+    private int currentActiveBombs = 0;
+
+
+    void PlaceBomb()
+    {
+        if (currentActiveBombs >= maxActiveBombs)
+            return;
+
+        Vector3 spawnPos = new Vector3(gridPosition.x, gridPosition.y, 0);
+        GameObject bombObj = Instantiate(bombPrefab, spawnPos, Quaternion.identity);
+
+        Bomb bombScript = bombObj.GetComponent<Bomb>();
+        if (bombScript != null)
+            bombScript.SetOwner(this); // Привязываем владельца
+
+        currentActiveBombs++;
+    }
+
+
+    public void OnBombExploded()
+    {
+        currentActiveBombs = Mathf.Max(0, currentActiveBombs - 1);
+    }
+
+    public void IncreaseMaxBombs(int amount)
+    {
+        maxActiveBombs += amount;
+    }
+
+    // Методы для UI-кнопок
+    private Vector2Int pendingInput = Vector2Int.zero;
+    private bool bombRequested = false;
+
+    public void SetMoveDirection(Vector2Int dir)
+    {
+        pendingInput = dir;
+    }
+
+    public void TryPlaceBomb()
+    {
+        bombRequested = true;
+    }
+
 }

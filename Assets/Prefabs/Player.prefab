@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 230820407363589274}
+  - component: {fileID: -4272654627999097795}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -32,6 +33,28 @@ Transform:
   - {fileID: 3336516675656832234}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-4272654627999097795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4573644268532572989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17659a843e118cc449c51e1ea5803ba1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxLives: 3
+  moveSpeed: 2
+  bombPrefab: {fileID: 839910339006828853, guid: 38b78e9654d373340beaa193289b870a, type: 3}
+  bombRange: 1
+  maxActiveBombs: 1
+  moveUp: 0
+  moveDown: 0
+  moveLeft: 0
+  moveRight: 0
+  placeBombButtonPressed: 0
 --- !u!1 &8834352535274079222
 GameObject:
   m_ObjectHideFlags: 0
