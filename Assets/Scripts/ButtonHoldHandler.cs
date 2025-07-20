@@ -23,7 +23,7 @@ public class ButtonHoldHandler : MonoBehaviour, IPointerDownHandler, IPointerUpH
         }
 
         player.SetMoveDirection(direction);
-        player.SetUsingUIInput(true);
+        // player.SetUsingUIInput(true);
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -38,7 +38,7 @@ public class ButtonHoldHandler : MonoBehaviour, IPointerDownHandler, IPointerUpH
         }
 
         player.SetMoveDirection(Vector2Int.zero);
-        player.SetUsingUIInput(false);
+        // player.SetUsingUIInput(false);
     }
 
 }

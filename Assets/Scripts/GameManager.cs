@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
 
     void CountEnemies()
     {
-        enemiesCount = FindObjectsOfType<Enemy>().Length;
+        enemiesCount = FindObjectsOfType<IEnemy>().Length;
         uiManager.UpdateEnemiesCount(enemiesCount);
     }
 
@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void OnEnemyKilled(Enemy enemy)
+    public void OnEnemyKilled(IEnemy enemy)
     {
         enemiesCount--;
         uiManager.UpdateEnemiesCount(enemiesCount);

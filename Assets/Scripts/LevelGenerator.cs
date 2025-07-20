@@ -3,17 +3,18 @@ using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
-    public int width = 15;
-    public int height = 15;
+    [SerializeField] private int width = 15;
+    [SerializeField] private int height = 15;
 
-    public GameObject indestructibleWallPrefab;
-    public GameObject destructibleBlockPrefab;
-    public List<GameObject> bonusPrefabs;
-    public GameObject playerPrefab;
+    [SerializeField] private GameObject indestructibleWallPrefab;
+    [SerializeField] private GameObject destructibleBlockPrefab;
+    [SerializeField] private List<GameObject> bonusPrefabs;
+    [SerializeField] private List<GameObject> enemyPrefabs;
+    [SerializeField] private GameObject playerPrefab;
     private GameObject playerInstance;
     private Vector2Int playerGridPosition;
-    public GameObject gearPrefab;
-    public GameObject exitPrefab;
+    [SerializeField] private GameObject gearPrefab;
+    [SerializeField] private GameObject exitPrefab;
     private Vector2Int exitPosition;
 
     private GameObject[,] mapTiles;
@@ -21,6 +22,8 @@ public class LevelGenerator : MonoBehaviour
     private List<Vector2Int> destructiblePositions = new List<Vector2Int>();
 
     private Dictionary<Vector2Int, GameObject> hiddenObjects = new Dictionary<Vector2Int, GameObject>();
+
+    private List<Vector2Int> blockedPositions = new List<Vector2Int>();
 
 
     void Start()
@@ -31,6 +34,11 @@ public class LevelGenerator : MonoBehaviour
 
     public void GenerateMap()
     {
+        foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy"))
+        {
+            Destroy(enemy);
+        }
+        
         // Уничтожаем старую карту
         if (mapTiles != null)
         {
@@ -93,9 +101,10 @@ public class LevelGenerator : MonoBehaviour
                 }
             }
         }
-
+        SpawnEnemies();
         SpawnGearsAndBonuses();
         SpawnExit();
+
 
         // Только при первом запуске создаем игрока
         if (playerInstance == null)
@@ -104,6 +113,37 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
+    void SpawnEnemies()
+    {
+        List<Vector2Int> availablePositions = new List<Vector2Int>(destructiblePositions);
+        availablePositions.RemoveAll(pos => ManhattanDistance(pos, playerGridPosition) < 3);
+
+        ShuffleList(availablePositions);
+
+        int totalEnemies = Mathf.Min(enemyPrefabs.Count, availablePositions.Count);
+
+        for (int i = 0; i < totalEnemies; i++)
+        {
+            Vector2Int pos = availablePositions[i];
+
+            // Удаляем разрушаемые блоки вокруг врага
+            foreach (Vector2Int adj in GetSurroundingPositions(pos))
+            {
+                if (IsDestructible(adj))
+                {
+                    DestroyBlock(adj);
+                }
+            }
+
+            // Спавним врага
+            GameObject enemy = Instantiate(enemyPrefabs[i], new Vector3(pos.x, pos.y, 0), Quaternion.identity, transform);
+        }
+    }
+
+    int ManhattanDistance(Vector2Int a, Vector2Int b)
+    {
+        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+    }
 
     List<Vector2Int> GetSurroundingPositions(Vector2Int center)
     {

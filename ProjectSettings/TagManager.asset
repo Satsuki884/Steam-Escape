@@ -12,6 +12,7 @@ TagManager:
   - Explosion
   - Enemy
   - Bomb
+  - PlayerZone
   layers:
   - Default
   - TransparentFX

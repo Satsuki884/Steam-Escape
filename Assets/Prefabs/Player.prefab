@@ -48,9 +48,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxLives: 3
-  moveSpeed: 2
+  rb: {fileID: 5921307765973931767}
+  moveSpeed: 25
   bombPrefab: {fileID: 839910339006828853, guid: 38b78e9654d373340beaa193289b870a, type: 3}
   bombRange: 1
+  meshRenderer: {fileID: 8527885022775098907}
   maxActiveBombs: 1
 --- !u!65 &3388309880395552437
 BoxCollider:
@@ -111,9 +113,10 @@ GameObject:
   - component: {fileID: 3336516675656832234}
   - component: {fileID: 1331899714065834225}
   - component: {fileID: 8527885022775098907}
+  - component: {fileID: 3228165885299600246}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Player
+  m_TagString: PlayerZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -183,3 +186,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3228165885299600246
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8834352535274079222}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.5, y: 1, z: 2.5}
+  m_Center: {x: 0, y: 0, z: 0}
