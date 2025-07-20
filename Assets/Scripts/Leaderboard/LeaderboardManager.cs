@@ -24,6 +24,12 @@ public class LeaderboardManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
+
+    private void Start()
+    {
+        saveData = SaveData.Instance;
+        InitializePlayerAccount();
+    }
     public IEnumerator SubmitScore(int score)
     {
         string username = PlayerPrefs.GetString("player_name", "Unknown");
@@ -197,12 +203,8 @@ public class LeaderboardManager : MonoBehaviour
         PlayerPrefs.SetString("player_name", username);
         PlayerPrefs.Save();
 
-        saveData = FindObjectOfType<SaveData>();
-        Debug.Log($"SaveData instance found: {saveData != null}");
-        if (saveData != null)
-        {
-            saveData.SetUsername(username);
-        }
+        saveData.SetUsername(username);
+
 
         // Отправляем на сервер с нулевым счётом
         yield return SubmitScore(0);

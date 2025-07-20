@@ -25,19 +25,42 @@ using UnityEngine.Networking;
 public class WebViewController : MonoBehaviour
 {
     public string Url;
-    public int LeftMargin, RightMargin, TopMargin, BottomMargin;
+    public RectTransform targetPanel;
+    // public int LeftMargin, RightMargin, TopMargin, BottomMargin;
 
     [SerializeField]
     private WebViewObject webViewObject;
 
     private Coroutine _loadCoroutine;
 
-    private void Start() {
+    private void Start()
+    {
         _loadCoroutine = StartCoroutine(LoadWebView(Url));
         SetVisibility(true);
+        UpdateMarginsFromPanel();
     }
 
-    private void OnDisable() 
+    private void UpdateMarginsFromPanel()
+    {
+        Vector3[] worldCorners = new Vector3[4];
+        targetPanel.GetWorldCorners(worldCorners); // Получаем мировые координаты углов
+
+        Vector3 bottomLeft = worldCorners[0];
+        Vector3 topRight = worldCorners[2];
+
+        // Преобразуем в экранные координаты
+        Vector2 screenBottomLeft = RectTransformUtility.WorldToScreenPoint(null, bottomLeft);
+        Vector2 screenTopRight = RectTransformUtility.WorldToScreenPoint(null, topRight);
+
+        int left = Mathf.RoundToInt(screenBottomLeft.x);
+        int bottom = Mathf.RoundToInt(screenBottomLeft.y);
+        int right = Mathf.RoundToInt(Screen.width - screenTopRight.x);
+        int top = Mathf.RoundToInt(Screen.height - screenTopRight.y);
+
+        webViewObject.SetMargins(left, top, right, bottom);
+    }
+
+    private void OnDisable()
     {
         if (_loadCoroutine != null)
         {
@@ -166,24 +189,29 @@ public class WebViewController : MonoBehaviour
 
         //webViewObject.SetScrollbarsVisibility(true);
 
-        webViewObject.SetMargins(LeftMargin, TopMargin, RightMargin, BottomMargin);
+        // webViewObject.SetMargins(LeftMargin, TopMargin, RightMargin, BottomMargin);
         webViewObject.SetTextZoom(100);  // android only. cf. https://stackoverflow.com/questions/21647641/android-webview-set-font-size-system-default/47017410#47017410
 
 #if !UNITY_WEBPLAYER && !UNITY_WEBGL
-        if (Url.StartsWith("http")) {
+        if (Url.StartsWith("http"))
+        {
             webViewObject.LoadURL(Url.Replace(" ", "%20"));
-        } else {
+        }
+        else
+        {
             var exts = new string[]{
                 ".jpg",
                 ".js",
                 ".html"  // should be last
             };
-            foreach (var ext in exts) {
+            foreach (var ext in exts)
+            {
                 var url = Url.Replace(".html", ext);
                 var src = System.IO.Path.Combine(Application.streamingAssetsPath, url);
                 var dst = System.IO.Path.Combine(Application.temporaryCachePath, url);
                 byte[] result = null;
-                if (src.Contains("://")) {  // for Android
+                if (src.Contains("://"))
+                {  // for Android
 #if UNITY_2018_4_OR_NEWER
                     // NOTE: a more complete code that utilizes UnityWebRequest can be found in https://github.com/gree/unity-webview/commit/2a07e82f760a8495aa3a77a23453f384869caba7#diff-4379160fa4c2a287f414c07eb10ee36d
                     var unityWebRequest = UnityWebRequest.Get(src);
@@ -194,11 +222,14 @@ public class WebViewController : MonoBehaviour
                     yield return www;
                     result = www.bytes;
 #endif
-                } else {
+                }
+                else
+                {
                     result = System.IO.File.ReadAllBytes(src);
                 }
                 System.IO.File.WriteAllBytes(dst, result);
-                if (ext == ".html") {
+                if (ext == ".html")
+                {
                     webViewObject.LoadURL("file://" + dst.Replace(" ", "%20"));
                     break;
                 }

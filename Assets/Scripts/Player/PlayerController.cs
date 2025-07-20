@@ -102,6 +102,7 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage()
     {
+        if (isInvincible) return;
         currentLives--;
         gameManager.UpdateLives(currentLives);
 
@@ -204,8 +205,8 @@ public class PlayerController : MonoBehaviour
 
     public void ResetPlayerState()
     {
-        currentLives = maxLives = 33;
-        moveSpeed = 15f;
+        currentLives = maxLives = 5;
+        moveSpeed = 5f;
         bombRange = 1;
         maxActiveBombs = 1;
         currentActiveBombs = 0;

@@ -13,7 +13,7 @@ public class RatingPanelUI : MonoBehaviour
     private void Start()
     {
         leaderboardManager = LeaderboardManager.Instance;
-        leaderboardManager.InitializePlayerAccount();
+        // leaderboardManager.InitializePlayerAccount();
         Show();
     }
 

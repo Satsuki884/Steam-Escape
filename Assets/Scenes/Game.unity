@@ -1324,7 +1324,6 @@ MonoBehaviour:
   gearsText: {fileID: 854119037}
   timerText: {fileID: 680426500}
   livesText: {fileID: 1599910399}
-  enemiesText: {fileID: 0}
   gameOverPanel: {fileID: 855981871}
   gameOverScoreText: {fileID: 1418603101}
   bombCountText: {fileID: 248361659}
@@ -1993,7 +1992,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &855981872
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3668,7 +3667,7 @@ MonoBehaviour:
   score: 0
   gears: 0
   enemiesCount: 0
-  gameTime: 180
+  gameTime: 240
 --- !u!4 &1447510770
 Transform:
   m_ObjectHideFlags: 0
@@ -3701,7 +3700,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1479208760
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4421,7 +4420,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1694883158
 RectTransform:
   m_ObjectHideFlags: 0

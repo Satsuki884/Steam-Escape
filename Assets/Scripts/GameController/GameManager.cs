@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 
     public int enemiesCount;
 
-    public float gameTime = 180f; // 3 минуты
+    public float gameTime = 240f; // 3 минуты
     private float timer;
 
     private LevelGenerator mapGen;
