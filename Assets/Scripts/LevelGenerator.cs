@@ -18,12 +18,12 @@ public class LevelGenerator : MonoBehaviour
     private Vector2Int exitPosition;
 
     private GameObject[,] mapTiles;
+    public GameObject[,] MapTiles => mapTiles;
 
     private List<Vector2Int> destructiblePositions = new List<Vector2Int>();
 
     private Dictionary<Vector2Int, GameObject> hiddenObjects = new Dictionary<Vector2Int, GameObject>();
-
-    private List<Vector2Int> blockedPositions = new List<Vector2Int>();
+    public Dictionary<Vector2Int, GameObject> HiddenObjects => hiddenObjects;
 
 
     void Start()
@@ -38,7 +38,7 @@ public class LevelGenerator : MonoBehaviour
         {
             Destroy(enemy);
         }
-        
+
         // Уничтожаем старую карту
         if (mapTiles != null)
         {
@@ -257,7 +257,20 @@ public class LevelGenerator : MonoBehaviour
     {
         if (IsDestructible(pos))
         {
-            Destroy(mapTiles[pos.x, pos.y]);
+            GameObject block = mapTiles[pos.x, pos.y];
+
+            if (block != null)
+            {
+                // Останавливаем мигание, если есть компонент
+                var flasher = block.GetComponent<BlockFlasher>();
+                if (flasher != null)
+                {
+                    flasher.StopFlashing();
+                }
+
+                Destroy(block);
+            }
+
             mapTiles[pos.x, pos.y] = null;
             OnDestructibleDestroyed(pos);
         }

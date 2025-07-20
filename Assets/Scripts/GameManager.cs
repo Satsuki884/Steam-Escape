@@ -44,7 +44,6 @@ public class GameManager : MonoBehaviour
     void CountEnemies()
     {
         enemiesCount = FindObjectsOfType<IEnemy>().Length;
-        uiManager.UpdateEnemiesCount(enemiesCount);
     }
 
     public void AddScore(int amount)
@@ -87,11 +86,12 @@ public class GameManager : MonoBehaviour
 
     public void OnEnemyKilled(IEnemy enemy)
     {
+        Debug.Log($"enemiesCount: {enemiesCount}");
         enemiesCount--;
-        uiManager.UpdateEnemiesCount(enemiesCount);
 
         if (enemiesCount <= 0)
         {
+            Debug.Log("All enemies killed!");
             allEnemiesKilled = true;
             HighlightDestructiblesWithBonusesAndExit();
         }
@@ -99,9 +99,27 @@ public class GameManager : MonoBehaviour
 
     void HighlightDestructiblesWithBonusesAndExit()
     {
-        // Можно реализовать визуальное подсвечивание нужных блоков,
-        // например менять цвет или материал.
+        foreach (var kvp in mapGen.HiddenObjects)
+        {
+            Vector2Int pos = kvp.Key;
+
+            if (mapGen.IsDestructible(pos))
+            {
+                var block = mapGen.MapTiles[pos.x, pos.y];
+                if (block != null)
+                {
+                    var flasher = block.GetComponent<BlockFlasher>();
+                    if (flasher == null)
+                    {
+                        flasher = block.AddComponent<BlockFlasher>();
+                    }
+
+                    flasher.StartFlashing(Color.yellow, 0.5f);
+                }
+            }
+        }
     }
+
 
     public void OnPlayerFoundExit()
     {
@@ -110,7 +128,8 @@ public class GameManager : MonoBehaviour
 
         // Можно реализовать плавный переход или эффект
         mapGen.GenerateMap();
-        CountEnemies();
+        allEnemiesKilled = false;
+        Invoke(nameof(CountEnemies), 0.1f);
         timer = gameTime;
     }
 
@@ -139,11 +158,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void UpdateUI()
+    public void UpdateUI()
     {
         uiManager.UpdateScore(score);
         uiManager.UpdateGears(gears);
-        uiManager.UpdateEnemiesCount(enemiesCount);
         uiManager.UpdateLives(FindObjectOfType<PlayerController>().maxLives);
         uiManager.UpdateSpeed(FindObjectOfType<PlayerController>().moveSpeed);
     }

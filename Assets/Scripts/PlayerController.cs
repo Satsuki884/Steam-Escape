@@ -253,13 +253,14 @@ public class PlayerController : MonoBehaviour
 
     public void ResetPlayerState()
     {
-        currentLives = maxLives = 3;
-        moveSpeed = 15f;
+        currentLives = maxLives = 33;
+        moveSpeed = 25f;
         bombRange = 1;
         maxActiveBombs = 1;
         currentActiveBombs = 0;
-        gameManager.ResetScore();      // Обнулим очки
-        gameManager.ResetGears();      // Обнулим шестерёнки
+        gameManager.ResetScore();
+        gameManager.ResetGears();
+        gameManager.UpdateUI();
 
         gridPosition = Vector2Int.RoundToInt(transform.position);
         transform.position = new Vector3(gridPosition.x, gridPosition.y, 0);

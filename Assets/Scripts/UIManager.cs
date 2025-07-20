@@ -8,7 +8,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text gearsText;
     [SerializeField] private TMP_Text timerText;
     [SerializeField] private TMP_Text livesText;
-    [SerializeField] private TMP_Text enemiesText;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private TMP_Text gameOverScoreText;
     [SerializeField] private TMP_Text bombCountText;
@@ -33,11 +32,6 @@ public class UIManager : MonoBehaviour
     public void UpdateLives(int lives)
     {
         livesText.text = $"Lives: {lives}";
-    }
-
-    public void UpdateEnemiesCount(int count)
-    {
-        enemiesText.text = $"Enemies: {count}";
     }
 
     public void ShowGameOver(int score)
