@@ -50,8 +50,8 @@ public class PanelsManager : MonoBehaviour
     public void GoToMainMenu()
     {
         Time.timeScale = 1;
-        // SceneManager.LoadScene("Menu");
-        Debug.Log("Main Menu button clicked. Implement scene loading here.");
+        SceneManager.LoadScene("Menu");
+        // Debug.Log("Main Menu button clicked. Implement scene loading here.");
     }
 
 }

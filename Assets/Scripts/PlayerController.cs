@@ -6,6 +6,14 @@ public class PlayerController : MonoBehaviour
 {
     public int maxLives = 3;
     private int currentLives;
+    public int CurrentLives
+    {
+        get { return currentLives; }
+        set
+        {
+            currentLives = value;
+        }
+    }
 
     [SerializeField] private Rigidbody rb;
 
@@ -24,7 +32,7 @@ public class PlayerController : MonoBehaviour
 
     private bool isInvincible = false;
 
-    [SerializeField] private Renderer  meshRenderer;
+    [SerializeField] private Renderer meshRenderer;
     private Color originalColor;
 
     // private Vector2 movement;
@@ -126,11 +134,6 @@ public class PlayerController : MonoBehaviour
         else if (other.CompareTag("Gear"))
         {
             gameManager.AddGears(1);
-            Destroy(other.gameObject);
-        }
-        else if (other.CompareTag("Bonus"))
-        {
-            gameManager.CollectBonus(other.gameObject);
             Destroy(other.gameObject);
         }
         else if (other.CompareTag("Exit"))
@@ -251,7 +254,7 @@ public class PlayerController : MonoBehaviour
     public void ResetPlayerState()
     {
         currentLives = maxLives = 3;
-        moveSpeed = 25f;
+        moveSpeed = 15f;
         bombRange = 1;
         maxActiveBombs = 1;
         currentActiveBombs = 0;

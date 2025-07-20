@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8197861109620187283}
   - component: {fileID: 7230618951038094544}
+  - component: {fileID: 4158430306164212672}
   m_Layer: 0
-  m_Name: ForBomb
+  m_Name: RangeBomb
   m_TagString: Bonus
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54,6 +55,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.4, y: 0.4, z: 0.4}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4158430306164212672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2550620139355374994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d29c42a36bf48694a95c0b5b9c4af669, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3706657178023830137
 GameObject:
   m_ObjectHideFlags: 0

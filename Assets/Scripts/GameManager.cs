@@ -59,13 +59,29 @@ public class GameManager : MonoBehaviour
         uiManager.UpdateGears(gears);
     }
 
-    public void CollectBonus(GameObject bonus)
+    public void CollectBonus(BonusType bonus)
     {
-        // Пример: увеличиваем дальность взрыва игрока
         PlayerController player = FindObjectOfType<PlayerController>();
-        if (player != null)
+        if (player == null) return;
+
+        switch (bonus)
         {
-            player.bombRange += 1;
+            case BonusType.Speed:
+                player.moveSpeed += 5f;
+                uiManager.UpdateSpeed(player.moveSpeed);
+                break;
+            case BonusType.Range:
+                player.bombRange += 1;
+                UpdateBombStatsUI();
+                break;
+            case BonusType.Health:
+                player.CurrentLives = Mathf.Min(player.CurrentLives + 1, player.maxLives);
+                UpdateLives(player.CurrentLives);
+                break;
+            case BonusType.Bombs:
+                player.maxActiveBombs += 1;
+                UpdateBombStatsUI();
+                break;
         }
     }
 

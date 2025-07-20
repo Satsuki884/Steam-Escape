@@ -8,7 +8,7 @@ public class StalkerEnemy : IEnemy
     private float moveCooldown = 0.5f;
     // private float moveTimer = 0f;
 
-    private void Update()
+    protected override void Update()
     {
         if (isFollowingPlayer && playerTransform != null)
         {
