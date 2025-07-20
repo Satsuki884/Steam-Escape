@@ -1,23 +1,18 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class IEnemy : MonoBehaviour
 {
-    public float moveInterval = 1f;
-    protected float moveTimer;
-
     protected Vector2Int gridPosition;
-
     protected LevelGenerator mapGen;
     protected GameManager gameManager;
 
-    private Vector2Int currentDirection = Vector2Int.right;
+    protected Vector2Int currentDirection = Vector2Int.right;
 
-    private Rigidbody rb;
+    protected Rigidbody rb;
 
-    private Vector3 targetWorldPos;
-    private bool isMoving = false;
-    private float moveSpeed = 3f; // скорость движения между клетками
+    protected Vector3 targetWorldPos;
+    [SerializeField] private float moveSpeed = 3f;
+    protected bool hasTarget = false;
 
     void Start()
     {
@@ -26,49 +21,44 @@ public class IEnemy : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         gridPosition = Vector2Int.RoundToInt(transform.position);
-        targetWorldPos = new Vector3(gridPosition.x, gridPosition.y, 0);
-        transform.position = targetWorldPos;
+        targetWorldPos = GridToWorld(gridPosition);
+        rb.position = targetWorldPos;
+        hasTarget = true;
     }
-
-    protected virtual void Update()
-    {
-        // Если враг уже движется, не запускаем новое движение
-        if (isMoving) return;
-
-        moveTimer += Time.deltaTime;
-        if (moveTimer >= moveInterval)
-        {
-            moveTimer = 0f;
-            Vector2Int oldGridPos = gridPosition;
-            MoveSmart();
-
-            // Если позиция изменилась — начинаем движение
-            if (gridPosition != oldGridPos)
-            {
-                targetWorldPos = new Vector3(gridPosition.x, gridPosition.y, 0);
-                isMoving = true;
-            }
-        }
-    }
-
     void FixedUpdate()
     {
-        if (isMoving)
+        if (!hasTarget)
         {
-            // Плавно двигаем Rigidbody к targetWorldPos
-            Vector3 newPos = Vector3.MoveTowards(rb.position, targetWorldPos, moveSpeed * Time.fixedDeltaTime);
-            rb.MovePosition(newPos);
+            DecideNextDirection();
 
-            // Если дошли до цели — останавливаем движение
-            if (Vector3.Distance(rb.position, targetWorldPos) < 0.01f)
+            Vector2Int nextPos = gridPosition + currentDirection;
+
+            if (CanMoveTo(nextPos))
             {
-                rb.position = targetWorldPos;
-                isMoving = false;
+                gridPosition = nextPos;
+                targetWorldPos = GridToWorld(gridPosition);
+                hasTarget = true;
             }
+            else
+            {
+                hasTarget = false;
+                return;
+            }
+        }
+
+        Vector3 newPos = Vector3.MoveTowards(rb.position, targetWorldPos, moveSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(newPos);
+
+        if (Vector3.Distance(rb.position, targetWorldPos) < 0.01f)
+        {
+            rb.position = targetWorldPos;
+            hasTarget = false;
         }
     }
 
-    void MoveSmart()
+
+
+    void DecideNextDirection()
     {
         Vector2Int[] lateralDirs = GetLateralDirections(currentDirection);
         Vector2Int forwardPos = gridPosition + currentDirection;
@@ -81,10 +71,7 @@ public class IEnemy : MonoBehaviour
         {
             Vector2Int backDir = -currentDirection;
             if (CanMoveTo(gridPosition + backDir))
-            {
                 currentDirection = backDir;
-                gridPosition += backDir;
-            }
             return;
         }
 
@@ -92,28 +79,25 @@ public class IEnemy : MonoBehaviour
         {
             foreach (Vector2Int lateralDir in lateralDirs)
             {
-                Vector2Int targetPos = gridPosition + lateralDir;
-                if (CanMoveTo(targetPos))
+                if (CanMoveTo(gridPosition + lateralDir))
                 {
                     currentDirection = lateralDir;
-                    gridPosition = targetPos;
                     return;
                 }
             }
         }
-
-        if (!forwardBlocked)
+        else
         {
-            gridPosition = forwardPos;
+            // направление не меняем, продолжаем двигаться вперёд
         }
     }
 
-    bool CanMoveTo(Vector2Int pos)
+    protected bool CanMoveTo(Vector2Int pos)
     {
         if (mapGen.IsIndestructible(pos) || mapGen.IsDestructible(pos))
             return false;
 
-        Collider[] hits = Physics.OverlapSphere(new Vector3(pos.x, pos.y, 0), 0.1f);
+        Collider[] hits = Physics.OverlapSphere(GridToWorld(pos), 0.1f);
         foreach (var hit in hits)
         {
             if (hit.CompareTag("Enemy") || hit.CompareTag("Bomb"))
@@ -121,6 +105,11 @@ public class IEnemy : MonoBehaviour
         }
 
         return true;
+    }
+
+    Vector3 GridToWorld(Vector2Int gridPos)
+    {
+        return new Vector3(gridPos.x, gridPos.y, 0f);
     }
 
     Vector2Int[] GetLateralDirections(Vector2Int dir)
