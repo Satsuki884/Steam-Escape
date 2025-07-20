@@ -120,13 +120,12 @@ public class LevelGenerator : MonoBehaviour
 
         ShuffleList(availablePositions);
 
-        int totalEnemies = Mathf.Min(enemyPrefabs.Count, availablePositions.Count);
+        int enemiesToSpawn = Mathf.Clamp(Random.Range(2, 6), 0, availablePositions.Count);
 
-        for (int i = 0; i < totalEnemies; i++)
+        for (int i = 0; i < enemiesToSpawn; i++)
         {
             Vector2Int pos = availablePositions[i];
 
-            // Удаляем разрушаемые блоки вокруг врага
             foreach (Vector2Int adj in GetSurroundingPositions(pos))
             {
                 if (IsDestructible(adj))
@@ -135,10 +134,11 @@ public class LevelGenerator : MonoBehaviour
                 }
             }
 
-            // Спавним врага
-            GameObject enemy = Instantiate(enemyPrefabs[i], new Vector3(pos.x, pos.y, 0), Quaternion.identity, transform);
+            GameObject prefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Count)];
+            Instantiate(prefab, new Vector3(pos.x, pos.y, 0), Quaternion.identity, transform);
         }
     }
+
 
     int ManhattanDistance(Vector2Int a, Vector2Int b)
     {

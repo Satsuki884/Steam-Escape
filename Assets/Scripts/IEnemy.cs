@@ -11,45 +11,100 @@ public class IEnemy : MonoBehaviour
     protected LevelGenerator mapGen;
     protected GameManager gameManager;
 
-    private Vector2Int currentDirection = Vector2Int.right; // начальное направление (можно рандомизировать)
-    // private float moveCooldown = 0.5f;
+    private Vector2Int currentDirection = Vector2Int.right;
+
+    private Rigidbody rb;
+
+    private Vector3 targetWorldPos;
+    private bool isMoving = false;
+    private float moveSpeed = 3f; // скорость движения между клетками
 
     void Start()
     {
         mapGen = FindObjectOfType<LevelGenerator>();
         gameManager = FindObjectOfType<GameManager>();
+        rb = GetComponent<Rigidbody>();
 
         gridPosition = Vector2Int.RoundToInt(transform.position);
-        transform.position = new Vector3(gridPosition.x, gridPosition.y, 0);
+        targetWorldPos = new Vector3(gridPosition.x, gridPosition.y, 0);
+        transform.position = targetWorldPos;
     }
 
     protected virtual void Update()
     {
+        // Если враг уже движется, не запускаем новое движение
+        if (isMoving) return;
+
         moveTimer += Time.deltaTime;
         if (moveTimer >= moveInterval)
         {
-            moveTimer = 0;
+            moveTimer = 0f;
+            Vector2Int oldGridPos = gridPosition;
             MoveSmart();
+
+            // Если позиция изменилась — начинаем движение
+            if (gridPosition != oldGridPos)
+            {
+                targetWorldPos = new Vector3(gridPosition.x, gridPosition.y, 0);
+                isMoving = true;
+            }
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (isMoving)
+        {
+            // Плавно двигаем Rigidbody к targetWorldPos
+            Vector3 newPos = Vector3.MoveTowards(rb.position, targetWorldPos, moveSpeed * Time.fixedDeltaTime);
+            rb.MovePosition(newPos);
+
+            // Если дошли до цели — останавливаем движение
+            if (Vector3.Distance(rb.position, targetWorldPos) < 0.01f)
+            {
+                rb.position = targetWorldPos;
+                isMoving = false;
+            }
         }
     }
 
     void MoveSmart()
     {
         Vector2Int[] lateralDirs = GetLateralDirections(currentDirection);
-        List<Vector2Int> tryDirections = new List<Vector2Int> { currentDirection };
-        tryDirections.AddRange(lateralDirs); // влево и вправо от текущего
-        tryDirections.Add(-currentDirection); // в конец списка — назад, если всё заблокировано
+        Vector2Int forwardPos = gridPosition + currentDirection;
 
-        foreach (Vector2Int dir in tryDirections)
+        bool forwardBlocked = !CanMoveTo(forwardPos);
+        bool lateralLeftBlocked = !CanMoveTo(gridPosition + lateralDirs[0]);
+        bool lateralRightBlocked = !CanMoveTo(gridPosition + lateralDirs[1]);
+
+        if (forwardBlocked && lateralLeftBlocked && lateralRightBlocked)
         {
-            Vector2Int targetPos = gridPosition + dir;
-            if (CanMoveTo(targetPos))
+            Vector2Int backDir = -currentDirection;
+            if (CanMoveTo(gridPosition + backDir))
             {
-                currentDirection = dir;
-                gridPosition = targetPos;
-                transform.position = new Vector3(gridPosition.x, gridPosition.y, 0);
-                return;
+                currentDirection = backDir;
+                gridPosition += backDir;
             }
+            return;
+        }
+
+        if (forwardBlocked)
+        {
+            foreach (Vector2Int lateralDir in lateralDirs)
+            {
+                Vector2Int targetPos = gridPosition + lateralDir;
+                if (CanMoveTo(targetPos))
+                {
+                    currentDirection = lateralDir;
+                    gridPosition = targetPos;
+                    return;
+                }
+            }
+        }
+
+        if (!forwardBlocked)
+        {
+            gridPosition = forwardPos;
         }
     }
 
@@ -58,8 +113,7 @@ public class IEnemy : MonoBehaviour
         if (mapGen.IsIndestructible(pos) || mapGen.IsDestructible(pos))
             return false;
 
-        // Проверка на врагов, бомбы и другие препятствия
-        Collider2D[] hits = Physics2D.OverlapPointAll(new Vector2(pos.x, pos.y));
+        Collider[] hits = Physics.OverlapSphere(new Vector3(pos.x, pos.y, 0), 0.1f);
         foreach (var hit in hits)
         {
             if (hit.CompareTag("Enemy") || hit.CompareTag("Bomb"))
