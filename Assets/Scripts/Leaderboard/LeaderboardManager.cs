@@ -28,8 +28,45 @@ public class LeaderboardManager : MonoBehaviour
     private void Start()
     {
         saveData = SaveData.Instance;
-        InitializePlayerAccount();
+        StartCoroutine(InternetCheckRoutine());
+        // InitializePlayerAccount();
     }
+
+    private IEnumerator InternetCheckRoutine()
+    {
+        while (true)
+        {
+            yield return WaitForInternet(success =>
+            {
+                if (success)
+                {
+                    Debug.Log("Internet available");
+
+                    if (saveData.IsUsernamePending())
+                        StartCoroutine(GenerateUniqueUsernameAndSubmit());
+                    else if (saveData.IsScorePending())
+                        StartCoroutine(SendPendingScore());
+                }
+                else
+                {
+                    Debug.Log("Internet unavailable");
+                }
+            });
+
+            yield return new WaitForSeconds(10f);
+        }
+    }
+
+    private IEnumerator WaitForInternet(System.Action<bool> callback)
+    {
+        UnityWebRequest request = UnityWebRequest.Get(supabaseUrl);
+        request.timeout = 5;
+        yield return request.SendWebRequest();
+
+        bool success = request.result == UnityWebRequest.Result.Success;
+        callback(success);
+    }
+
     public IEnumerator SubmitScore(int score)
     {
         string username = PlayerPrefs.GetString("player_name", "Unknown");
@@ -48,9 +85,33 @@ public class LeaderboardManager : MonoBehaviour
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)
-            Debug.Log("Score submitted or updated!");
+            saveData.SetScorePending(false);
         else
             Debug.LogError("SubmitScore error: " + request.error);
+    }
+
+
+    public void TryUpdateScore(int score)
+    {
+        StartCoroutine(WaitForInternet(success =>
+        {
+            if (success)
+            {
+                StartCoroutine(UpdateScore(score));
+                saveData.ClearPendingScore();
+            }
+            else
+            {
+                Debug.Log("No internet. Score update deferred.");
+                saveData.SetPendingScore(score);
+            }
+        }));
+    }
+
+    private IEnumerator SendPendingScore()
+    {
+        int score = saveData.GetScore();
+        yield return SubmitScore(score);
     }
 
     public IEnumerator UpdateScore(int score)
@@ -71,9 +132,15 @@ public class LeaderboardManager : MonoBehaviour
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)
+        {
             Debug.Log("Score updated!");
+            saveData.ClearPendingScore();
+        }
         else
-            Debug.LogError("SubmitScore error: " + request.error);
+        {
+            Debug.LogError("UpdateScore error: " + request.error);
+            saveData.SetScorePending(true);
+        }
     }
 
 
@@ -140,7 +207,12 @@ public class LeaderboardManager : MonoBehaviour
             if (place > 0)
                 targetText.text = $"{place}. ME — {foundScore}";
             else
-                targetText.text = "-. - -";
+                targetText.text = $"-. ME — {saveData.GetScore()}";
+        }
+        else
+        {
+            Debug.LogError("GetCurrentPlayerRank error: " + request.error);
+            targetText.text = "Error loading rank.";
         }
     }
 
@@ -175,14 +247,21 @@ public class LeaderboardManager : MonoBehaviour
     }
     public void InitializePlayerAccount()
     {
-        Debug.Log("Initializing player account...");
-        if (PlayerPrefs.HasKey("player_name"))
+        if (!PlayerPrefs.HasKey("player_name"))
         {
-            Debug.Log("Player name already exists: " + PlayerPrefs.GetString("player_name"));
-            return;
+            StartCoroutine(WaitForInternet(success =>
+            {
+                if (success)
+                {
+                    StartCoroutine(GenerateUniqueUsernameAndSubmit());
+                }
+                else
+                {
+                    Debug.LogWarning("No internet, delaying player creation.");
+                    saveData.SetUsernamePending(true);
+                }
+            }));
         }
-
-        StartCoroutine(GenerateUniqueUsernameAndSubmit());
     }
 
     private IEnumerator GenerateUniqueUsernameAndSubmit()
@@ -208,7 +287,7 @@ public class LeaderboardManager : MonoBehaviour
 
 
         // Отправляем на сервер с нулевым счётом
-        yield return SubmitScore(0);
+        yield return SubmitScore(saveData.GetScore());
 
         Debug.Log($"Создан новый игрок: {username}");
     }

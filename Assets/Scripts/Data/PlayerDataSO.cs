@@ -22,18 +22,32 @@ public class PlayerData
         get { return _username; }
         set { _username = value; }
     }
-    //TODO: realize shop with colors for player and explosion
-    [SerializeField] private Color _playerColor;
-    public Color PlayerColor
+
+    [SerializeField] private int _score;
+    public int Score
     {
-        get { return _playerColor; }
-        set { _playerColor = value; }
+        get { return _score; }
+        set { _score = value; }
     }
 
-    [SerializeField] private int _explosionColor;
-    public int ExplosionColor
-    {
-        get { return _explosionColor; }
-        set { _explosionColor = value; }
-    }
+    [SerializeField] private bool _isUsernamePending;
+    public bool IsUsernamePending { get => _isUsernamePending; set => _isUsernamePending = value; }
+
+    [SerializeField] private bool _isScorePending;
+    public bool IsScorePending { get => _isScorePending; set => _isScorePending = value; }
+
+    //TODO: realize shop with colors for player and explosion
+    // [SerializeField] private Color _playerColor;
+    // public Color PlayerColor
+    // {
+    //     get { return _playerColor; }
+    //     set { _playerColor = value; }
+    // }
+
+    // [SerializeField] private int _explosionColor;
+    // public int ExplosionColor
+    // {
+    //     get { return _explosionColor; }
+    //     set { _explosionColor = value; }
+    // }
 }

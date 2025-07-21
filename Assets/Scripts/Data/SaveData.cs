@@ -7,6 +7,8 @@ public class SaveData : MonoBehaviour
 
     public static SaveData Instance;
 
+    private int _pendingScore = -1;
+
     private void Awake()
     {
         if (Instance == null)
@@ -61,5 +63,66 @@ public class SaveData : MonoBehaviour
             Debug.Log("Setting username: " + username);
             _playerDataSO.PlayerData.Username = username;
         }
+    }
+
+    public void SetScore(int score)
+    {
+        if (_playerDataSO != null)
+        {
+            if (score < _playerDataSO.PlayerData.Score)
+            {
+                return;
+            }
+            else
+            {
+                _playerDataSO.PlayerData.Score = score;
+            }
+        }
+    }
+
+    public int GetScore()
+    {
+        return _playerDataSO?.PlayerData.Score ?? 0;
+    }
+
+    public bool IsUsernamePending()
+    {
+        return _playerDataSO != null && _playerDataSO.PlayerData.IsUsernamePending;
+    }
+
+    public void SetUsernamePending(bool value)
+    {
+        if (_playerDataSO != null)
+            _playerDataSO.PlayerData.IsUsernamePending = value;
+    }
+
+    public bool IsScorePending()
+    {
+        return _playerDataSO != null && _playerDataSO.PlayerData.IsScorePending;
+    }
+
+    public void SetScorePending(bool value)
+    {
+        if (_playerDataSO != null)
+            _playerDataSO.PlayerData.IsScorePending = value;
+    }
+
+    public void SetPendingScore(int score)
+    {
+        _pendingScore = score;
+        SetScorePending(true);
+        Debug.Log("Pending score set to: " + score);
+    }
+
+    public int GetPendingScore()
+    {
+        return _pendingScore;
+    }
+
+    public void ClearPendingScore()
+    {
+        _pendingScore = -1;
+        SetScorePending(false);
+        Debug.Log("Pending score cleared");
     }
 }
