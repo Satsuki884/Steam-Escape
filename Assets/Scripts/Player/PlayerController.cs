@@ -20,7 +20,13 @@ public class PlayerController : MonoBehaviour
     private Vector2 targetWorldPos;
     private bool hasTarget = false;
 
-    public float moveSpeed = 2f;
+    private float baseSpeed = 5f;
+    private float speedBonus = 0f;
+    private float invincibilityMultiplier = 1f;
+    public float moveSpeed
+    {
+        get { return (baseSpeed + speedBonus) * invincibilityMultiplier; }
+    }
     private Vector2Int gridPosition;
 
     [SerializeField] private GameObject bombPrefab;
@@ -117,12 +123,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void AddSpeedBonus(float amount)
+    {
+        speedBonus += amount;
+    }
+
     private IEnumerator InvincibilityRoutine()
     {
         Debug.Log("Player is now invincible!");
         isInvincible = true;
-        float originalSpeed = moveSpeed;
-        moveSpeed = originalSpeed * 2f;
+        // float originalSpeed = moveSpeed;
+        // moveSpeed = originalSpeed * 2f;
+        invincibilityMultiplier = 2f;
 
         float flashInterval = 0.2f;
         float timer = 0f;
@@ -146,7 +158,8 @@ public class PlayerController : MonoBehaviour
         }
 
         // Восстанавливаем скорость и цвет
-        moveSpeed = originalSpeed;
+        // moveSpeed = originalSpeed;
+        invincibilityMultiplier = 1f;
         if (meshRenderer != null)
             meshRenderer.material.color = originalColor;
 
@@ -206,7 +219,9 @@ public class PlayerController : MonoBehaviour
     public void ResetPlayerState()
     {
         currentLives = maxLives = 5;
-        moveSpeed = 5f;
+        baseSpeed = 5f;
+        speedBonus = 0f;
+        invincibilityMultiplier = 1f;
         bombRange = 1;
         maxActiveBombs = 1;
         currentActiveBombs = 0;

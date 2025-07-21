@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
         switch (bonus)
         {
             case BonusType.Speed:
-                player.moveSpeed += 1f;
+                player.AddSpeedBonus(1f);
                 uiManager.UpdateSpeed(player.moveSpeed);
                 break;
             case BonusType.Range:
@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour
 
     public void OnPlayerFoundExit()
     {
-        
+
         mapGen.GenerateMap();
         allEnemiesKilled = false;
         Invoke(nameof(CountEnemies), 0.1f);
