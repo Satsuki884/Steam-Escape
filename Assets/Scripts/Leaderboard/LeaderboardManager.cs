@@ -59,8 +59,8 @@ public class LeaderboardManager : MonoBehaviour
 
     private IEnumerator WaitForInternet(System.Action<bool> callback)
     {
-        UnityWebRequest request = UnityWebRequest.Get(supabaseUrl);
-        request.timeout = 5;
+        UnityWebRequest request = UnityWebRequest.Get("https://www.google.com");
+        request.timeout = 3;
         yield return request.SendWebRequest();
 
         bool success = request.result == UnityWebRequest.Result.Success;
@@ -207,12 +207,12 @@ public class LeaderboardManager : MonoBehaviour
             if (place > 0)
                 targetText.text = $"{place}. ME — {foundScore}";
             else
-                targetText.text = $"-. ME — {saveData.GetScore()}";
+                targetText.text = $"-. ME — -";
         }
         else
         {
             Debug.LogError("GetCurrentPlayerRank error: " + request.error);
-            targetText.text = "Error loading rank.";
+            targetText.text = $"-. ME — {saveData.GetScore()}";
         }
     }
 
