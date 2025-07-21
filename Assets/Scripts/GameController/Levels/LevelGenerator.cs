@@ -101,9 +101,10 @@ public class LevelGenerator : MonoBehaviour
                 }
             }
         }
+        
         SpawnEnemies();
-        SpawnGearsAndBonuses();
         SpawnExit();
+        SpawnGearsAndBonuses();
 
 
         // Только при первом запуске создаем игрока

@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fuseTime: 2
-  explosionPrefab: {fileID: 6020769748189453126, guid: ee2201ccb7ec0154f8b2f9d9729f72df, type: 3}
+  explosionPrefab: {fileID: 6020769748189453126, guid: b881b822619afb646bd1e2e1a2b1cfd9, type: 3}
 --- !u!135 &8821769092561340026
 SphereCollider:
   m_ObjectHideFlags: 0

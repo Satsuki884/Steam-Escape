@@ -50,7 +50,7 @@ MonoBehaviour:
   maxLives: 5
   rb: {fileID: 5921307765973931767}
   baseSpeed: 15
-  bombPrefab: {fileID: 839910339006828853, guid: 38b78e9654d373340beaa193289b870a, type: 3}
+  bombPrefab: {fileID: 839910339006828853, guid: 52ed024f4c24c7449af07dbd5e5db1d2, type: 3}
   bombRange: 1
   meshRenderer: {fileID: 8527885022775098907}
   maxActiveBombs: 1
@@ -73,8 +73,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.92927366, y: 0.9047556, z: 0.92124915}
-  m_Center: {x: -0.004892081, y: 0.00565207, z: -0.00439775}
+  m_Size: {x: 0.9, y: 0.9, z: 0.9}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &5921307765973931767
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -113,7 +113,6 @@ GameObject:
   - component: {fileID: 3336516675656832234}
   - component: {fileID: 1331899714065834225}
   - component: {fileID: 8527885022775098907}
-  - component: {fileID: 3228165885299600246}
   m_Layer: 0
   m_Name: Player
   m_TagString: PlayerZone
@@ -186,24 +185,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3228165885299600246
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8834352535274079222}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.5, y: 1, z: 2.5}
-  m_Center: {x: 0, y: 0, z: 0}
