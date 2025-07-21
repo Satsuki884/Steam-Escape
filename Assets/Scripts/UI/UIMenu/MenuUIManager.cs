@@ -18,6 +18,8 @@ public class MenuUIManager : MonoBehaviour
     [SerializeField] private GameObject infoPanel;
     [SerializeField] private Button closeInfo;
     [SerializeField] private Button settingsButton;
+    [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private Button closeSettingsButton;
     [SerializeField] private Button exitButton;
 
     private WebViewObject webViewObject;
@@ -33,10 +35,9 @@ public class MenuUIManager : MonoBehaviour
         closeLeaderboardButton.onClick.AddListener(() => leaderboardPanel.SetActive(false));
         infoButton.onClick.AddListener(OnInfoClicked);
         closeInfo.onClick.AddListener(OnInfoCloseClicked);
-        settingsButton.onClick.AddListener(OnSettingsClicked);
+        settingsButton.onClick.AddListener(() => settingsPanel.SetActive(true));
+        closeSettingsButton.onClick.AddListener(() => settingsPanel.SetActive(false));
         exitButton.onClick.AddListener(OnExitClicked);
-
-
 
         webViewObject = FindObjectOfType<WebViewObject>();
 
@@ -52,6 +53,7 @@ public class MenuUIManager : MonoBehaviour
         rulesPanel.SetActive(false);
         shopPanel.SetActive(false);
         leaderboardPanel.SetActive(false);
+        settingsPanel.SetActive(false);
     }
 
     void OnPlayClicked()
@@ -77,13 +79,6 @@ public class MenuUIManager : MonoBehaviour
         {
             webViewObject.SetVisibility(false);
         }
-    }
-
-
-    void OnSettingsClicked()
-    {
-        Debug.Log("Settings button clicked");
-        // Open settings UI
     }
 
     void OnExitClicked()
