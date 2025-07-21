@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -143,10 +144,21 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         uiManager.ShowGameOver(score);
-        var currentGears = SaveData.Instance.GetGears();
         SaveData.Instance.AddGears(gears);
-        leaderboardManager.SubmitScore(score);
+        SubmitScoreToLeaderboard();
     }
+
+    private void SubmitScoreToLeaderboard()
+    {
+        StartCoroutine(SubmitScoreCoroutine());
+    }
+
+    private IEnumerator SubmitScoreCoroutine()
+    {
+        yield return leaderboardManager.UpdateScore(score);
+    }
+
+
     public void UpdateUI()
     {
         uiManager.UpdateScore(score);

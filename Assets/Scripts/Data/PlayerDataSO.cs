@@ -11,8 +11,15 @@ public class PlayerDataSO : ScriptableObject
 public class PlayerData
 {
     [SerializeField] private int _gears;
-    public void SetGears(int value) { _gears = value; }
-    public int GetGears() { return _gears; }
+    public int Gears
+    {
+        get { return _gears; }
+        set { _gears = value; }
+    }
     [SerializeField] private string _username;
-    public void SetUsername(string value) { _username = value; }
+    public string Username
+    {
+        get { return _username; }
+        set { _username = value; }
+    }
 }

@@ -56,7 +56,7 @@ public class LeaderboardManager : MonoBehaviour
     public IEnumerator UpdateScore(int score)
     {
         var username = PlayerPrefs.GetString("player_name", "Unknown");
-        username = username.ToUpper();
+        Debug.Log($"Updating score for username: {username}, score: {score}");
         string json = JsonUtility.ToJson(new ScoreData(username, score));
         string endpoint = $"{supabaseUrl}/rest/v1/scores?username=eq.{username}";
 
@@ -204,6 +204,7 @@ public class LeaderboardManager : MonoBehaviour
         PlayerPrefs.Save();
 
         saveData.SetUsername(username);
+        saveData.AddGears(0);
 
 
         // Отправляем на сервер с нулевым счётом

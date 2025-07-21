@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 targetWorldPos;
     private bool hasTarget = false;
 
-    private float baseSpeed = 5f;
+    [SerializeField] private float baseSpeed = 5f;
     private float speedBonus = 0f;
     private float invincibilityMultiplier = 1f;
     public float moveSpeed
@@ -130,7 +130,7 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator InvincibilityRoutine()
     {
-        Debug.Log("Player is now invincible!");
+        // Debug.Log("Player is now invincible!");
         isInvincible = true;
         // float originalSpeed = moveSpeed;
         // moveSpeed = originalSpeed * 2f;
@@ -219,7 +219,7 @@ public class PlayerController : MonoBehaviour
     public void ResetPlayerState()
     {
         currentLives = maxLives = 5;
-        baseSpeed = 5f;
+        baseSpeed = 15f;
         speedBonus = 0f;
         invincibilityMultiplier = 1f;
         bombRange = 1;

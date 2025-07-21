@@ -5,47 +5,32 @@ public class SaveData : MonoBehaviour
     [Header("Player Data Configuration")]
     [SerializeField] private PlayerDataSO _playerDataSO;
 
-    private static SaveData _instance;
-    public static SaveData Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<SaveData>();
-                if (_instance == null)
-                {
-                    GameObject saveDataObject = new GameObject("SaveData");
-                    _instance = saveDataObject.AddComponent<SaveData>();
-                    DontDestroyOnLoad(saveDataObject);
-                }
-            }
-            return _instance;
-        }
-    }
+    public static SaveData Instance;
 
     private void Awake()
     {
-        if (_instance == null)
+        if (Instance == null)
         {
-            _instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else if (_instance != this)
+        else if (Instance != this)
         {
             Destroy(gameObject);
         }
     }
     public int GetGears()
     {
-        return _playerDataSO?.PlayerData.GetGears() ?? 0;
+        Debug.Log("GetGears called, returning: " + (_playerDataSO?.PlayerData.Gears ?? 0));
+        return _playerDataSO?.PlayerData.Gears ?? 0;
     }
     public void AddGears(int amount)
     {
         if (_playerDataSO != null)
         {
-            int currentGears = _playerDataSO.PlayerData.GetGears();
-            _playerDataSO.PlayerData.SetGears(currentGears + amount);
+            Debug.Log("Adding gears: " + amount);
+            int currentGears = _playerDataSO.PlayerData.Gears;
+            _playerDataSO.PlayerData.Gears = currentGears + amount;
         }
     }
 
@@ -53,7 +38,7 @@ public class SaveData : MonoBehaviour
     {
         if (_playerDataSO != null)
         {
-            int currentGears = _playerDataSO.PlayerData.GetGears();
+            int currentGears = _playerDataSO.PlayerData.Gears;
             if (currentGears < amount)
             {
                 Debug.LogWarning("Not enough gears to take away.");
@@ -61,7 +46,7 @@ public class SaveData : MonoBehaviour
             }
             else
             {
-                _playerDataSO.PlayerData.SetGears(Mathf.Max(0, currentGears - amount));
+                _playerDataSO.PlayerData.Gears = Mathf.Max(0, currentGears - amount);
                 return true;
             }
 
@@ -73,7 +58,8 @@ public class SaveData : MonoBehaviour
     {
         if (_playerDataSO != null)
         {
-            _playerDataSO.PlayerData.SetUsername(username);
+            Debug.Log("Setting username: " + username);
+            _playerDataSO.PlayerData.Username = username;
         }
     }
 }
