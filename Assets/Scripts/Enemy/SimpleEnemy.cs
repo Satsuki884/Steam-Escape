@@ -8,7 +8,7 @@ public class SimpleEnemy: IEnemy
         {
             gameManager.AddScore(100);
             gameManager.OnEnemyKilled(this);
-            Destroy(gameObject);
+            StartCoroutine(DestroySequence());
         }
     }
 }

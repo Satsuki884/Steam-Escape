@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Renderer meshRenderer;
     private Color originalColor;
 
-    // private Vector2 movement;
+    private bool canMove = true;
 
     void Start()
     {
@@ -61,6 +61,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+
+        if (!canMove) return;
         if (!hasTarget && moveDirection != Vector2Int.zero)
         {
             Vector2Int targetGridPos = gridPosition + moveDirection;
@@ -110,8 +112,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isInvincible) return;
         currentLives--;
-        gameManager.UpdateLives(currentLives);
-
+        gameManager.UpdateUI();
         if (currentLives <= 0)
         {
             gameManager.GameOver();
@@ -130,11 +131,38 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator InvincibilityRoutine()
     {
-        // Debug.Log("Player is now invincible!");
         isInvincible = true;
-        // float originalSpeed = moveSpeed;
-        // moveSpeed = originalSpeed * 2f;
         invincibilityMultiplier = 2f;
+        canMove = false;
+        gameManager.UpdateUI();
+
+        Color startColor = meshRenderer.material.color;
+        Vector3 startScale = transform.localScale;
+
+        float t = 0f;
+        while (t < 0.75f)
+        {
+            t += Time.deltaTime;
+            meshRenderer.material.color = Color.Lerp(startColor, Color.black, t / 0.75f);
+            transform.localScale = Vector3.Lerp(startScale, Vector3.zero, t / 0.75f);
+            yield return null;
+        }
+        while (t < 1.5f)
+        {
+            t += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero, t / 1.5f);
+            yield return null;
+        }
+        t = 0f;
+        while (t < 0.75f)
+        {
+            t += Time.deltaTime;
+            meshRenderer.material.color = Color.Lerp(Color.black, startColor, t / 0.75f);
+            transform.localScale = Vector3.Lerp(Vector3.zero, startScale, t / 0.75f);
+            yield return null;
+        }
+
+        canMove = true;
 
         float flashInterval = 0.2f;
         float timer = 0f;
@@ -142,29 +170,28 @@ public class PlayerController : MonoBehaviour
 
         while (timer < duration)
         {
-            // Меняем цвет на голубой
             if (meshRenderer != null)
                 meshRenderer.material.color = Color.cyan;
 
             yield return new WaitForSeconds(flashInterval);
 
-            // Возвращаем оригинальный цвет
             if (meshRenderer != null)
-                meshRenderer.material.color = originalColor;
+                meshRenderer.material.color = startColor;
 
             yield return new WaitForSeconds(flashInterval);
 
             timer += flashInterval * 2;
         }
 
-        // Восстанавливаем скорость и цвет
-        // moveSpeed = originalSpeed;
         invincibilityMultiplier = 1f;
+        gameManager.UpdateUI();
+
         if (meshRenderer != null)
-            meshRenderer.material.color = originalColor;
+            meshRenderer.material.color = startColor;
 
         isInvincible = false;
     }
+
 
     public int maxActiveBombs = 1;
     private int currentActiveBombs = 0;

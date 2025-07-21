@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class IEnemy : MonoBehaviour
@@ -14,6 +15,8 @@ public class IEnemy : MonoBehaviour
     [SerializeField] private float moveSpeed = 3f;
     protected bool hasTarget = false;
 
+    protected bool isBeingDestroyed = false;
+
     void Start()
     {
         mapGen = FindObjectOfType<LevelGenerator>();
@@ -27,6 +30,9 @@ public class IEnemy : MonoBehaviour
     }
     void FixedUpdate()
     {
+
+        if (isBeingDestroyed)
+            return;
         if (!hasTarget)
         {
             DecideNextDirection();
@@ -119,4 +125,43 @@ public class IEnemy : MonoBehaviour
         else
             return new[] { Vector2Int.up, Vector2Int.down };
     }
+
+    public IEnumerator DestroySequence()
+    {
+        isBeingDestroyed = true;
+
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            yield return new WaitForFixedUpdate();
+            rb.isKinematic = true;
+        }
+
+        var meshRenderer = gameObject.GetComponentInChildren<Renderer>();
+
+        float t = 0f;
+        Color startColor = meshRenderer.material.color;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime;
+            meshRenderer.material.color = Color.Lerp(startColor, Color.black, t / 1f);
+            yield return null;
+        }
+
+        t = 0f;
+        Vector3 originalScale = transform.localScale;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(originalScale, Vector3.zero, t / 1f);
+            yield return null;
+        }
+
+        Destroy(gameObject);
+    }
+
+
 }

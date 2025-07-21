@@ -78,7 +78,7 @@ public class StalkerEnemy : IEnemy
         {
             gameManager.AddScore(100);
             gameManager.OnEnemyKilled(this);
-            Destroy(gameObject);
+            StartCoroutine(DestroySequence());
         }
         // else if (other.CompareTag("PlayerZone"))
         // {

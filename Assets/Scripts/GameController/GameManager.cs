@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
                 break;
             case BonusType.Health:
                 player.CurrentLives = Mathf.Min(player.CurrentLives + 1, player.maxLives);
-                UpdateLives(player.CurrentLives);
+                uiManager.UpdateLives(player.CurrentLives);
                 break;
             case BonusType.Bombs:
                 player.maxActiveBombs += 1;
@@ -92,12 +92,10 @@ public class GameManager : MonoBehaviour
 
     public void OnEnemyKilled(IEnemy enemy)
     {
-        Debug.Log($"enemiesCount: {enemiesCount}");
         enemiesCount--;
 
         if (enemiesCount <= 0)
         {
-            Debug.Log("All enemies killed!");
             allEnemiesKilled = true;
             HighlightDestructiblesWithBonusesAndExit();
         }
@@ -136,11 +134,6 @@ public class GameManager : MonoBehaviour
         timer = gameTime;
     }
 
-    public void UpdateLives(int lives)
-    {
-        uiManager.UpdateLives(lives);
-    }
-
     public void GameOver()
     {
         uiManager.ShowGameOver(score);
@@ -163,7 +156,7 @@ public class GameManager : MonoBehaviour
     {
         uiManager.UpdateScore(score);
         uiManager.UpdateGears(gears);
-        uiManager.UpdateLives(FindObjectOfType<PlayerController>().maxLives);
+        uiManager.UpdateLives(FindObjectOfType<PlayerController>().CurrentLives);
         uiManager.UpdateSpeed(FindObjectOfType<PlayerController>().moveSpeed);
     }
 
