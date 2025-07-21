@@ -48,9 +48,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxLives: 5
-  animator: {fileID: 0}
   rb: {fileID: 5921307765973931767}
-  baseSpeed: 15
+  baseSpeed: 5
   bombPrefab: {fileID: 839910339006828853, guid: 52ed024f4c24c7449af07dbd5e5db1d2, type: 3}
   bombRange: 1
   meshRenderer: {fileID: 8527885022775098907}

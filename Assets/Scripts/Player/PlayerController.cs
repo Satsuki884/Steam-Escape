@@ -142,7 +142,7 @@ public class PlayerController : MonoBehaviour
     private IEnumerator InvincibilityRoutine()
     {
         isInvincible = true;
-        invincibilityMultiplier = 2f;
+        invincibilityMultiplier = 1.5f;
         canMove = false;
         gameManager.UpdateUI();
 
@@ -243,7 +243,7 @@ public class PlayerController : MonoBehaviour
 
     public void TryPlaceBomb()
     {
-        if (currentActiveBombs < maxActiveBombs)
+        if (currentActiveBombs < maxActiveBombs && canMove)
         {
             PlaceBomb();
         }
@@ -257,7 +257,7 @@ public class PlayerController : MonoBehaviour
     public void ResetPlayerState()
     {
         currentLives = maxLives = 5;
-        baseSpeed = 15f;
+        baseSpeed = 5f;
         speedBonus = 0f;
         invincibilityMultiplier = 1f;
         bombRange = 1;

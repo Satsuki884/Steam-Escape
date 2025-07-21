@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class StalkerEnemy : IEnemy
 {
-    private bool isFollowingPlayer = false;
-    private Transform playerTransform;
-    private bool isMoving = false;
-    private Vector3 targetWorldPosition;
+    // private bool isFollowingPlayer = false;
+    // private Transform playerTransform;
+    // private bool isMoving = false;
+    // private Vector3 targetWorldPosition;
 
     // void Update()
     // {

@@ -139,6 +139,7 @@ public class GameManager : MonoBehaviour
     {
         uiManager.ShowGameOver(score);
         SaveData.Instance.AddGears(gears);
+        SaveData.Instance.SetScore(score);
         SubmitScoreToLeaderboard();
     }
 

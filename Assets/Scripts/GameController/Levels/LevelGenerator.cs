@@ -42,6 +42,10 @@ public class LevelGenerator : MonoBehaviour
         {
             Destroy(enemy);
         }
+        foreach (var bomb in GameObject.FindGameObjectsWithTag("Bomb"))
+        {
+            Destroy(bomb);
+        }
 
         // Уничтожаем старую карту
         if (mapTiles != null)
@@ -134,7 +138,7 @@ public class LevelGenerator : MonoBehaviour
             // Удаляем окружающие разрушимые блоки
             foreach (Vector2Int adj in GetSurroundingPositions(pos))
             {
-                if (IsDestructible(adj))
+                if (IsDestructible(adj) && occupiedHiddenPositions.Add(adj))
                 {
                     DestroyBlock(adj);
                 }
@@ -244,8 +248,6 @@ public class LevelGenerator : MonoBehaviour
             }
         }
     }
-
-
     public void OnDestructibleDestroyed(Vector2Int pos)
     {
         if (hiddenObjects.ContainsKey(pos))

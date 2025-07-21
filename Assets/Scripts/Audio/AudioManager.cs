@@ -26,15 +26,15 @@ public class AudioManager : MonoBehaviour
 
 
     private string _menu = "Menu";
-    private string _game = "Game";
+    // private string _game = "Game";
 
-    [SerializeField] private string Bomb = "bomb";
-    [SerializeField] private string EnemyHit = "enemyHit";
-    [SerializeField] private string Bonus = "bonus";
-    [SerializeField] private string ExplosionSound = "explosionSound";
-    [SerializeField] private string ExplosionHit = "explosionHit";
-    [SerializeField] private string EndGame = "endGame";
-    [SerializeField] private string NewLevel = "newLevel";
+    // [SerializeField] private string Bomb = "bomb";
+    // [SerializeField] private string EnemyHit = "enemyHit";
+    // [SerializeField] private string Bonus = "bonus";
+    // [SerializeField] private string ExplosionSound = "explosionSound";
+    // [SerializeField] private string ExplosionHit = "explosionHit";
+    // [SerializeField] private string EndGame = "endGame";
+    // [SerializeField] private string NewLevel = "newLevel";
 
     private void Awake()
     {
