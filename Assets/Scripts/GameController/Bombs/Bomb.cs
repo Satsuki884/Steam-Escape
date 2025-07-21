@@ -120,6 +120,7 @@ public class Bomb : MonoBehaviour
 
     void CreateExplosionAt(Vector2Int pos)
     {
+        AudioManager.Instance.PlaySFX("explosionSound");
         Instantiate(explosionPrefab, new Vector3(pos.x, pos.y, 0), Quaternion.identity);
     }
 }

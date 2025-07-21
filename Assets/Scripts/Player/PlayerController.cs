@@ -92,17 +92,26 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Explosion") || other.CompareTag("Enemy") && !isInvincible)
+        if (other.CompareTag("Enemy") && !isInvincible)
         {
+            AudioManager.Instance.PlaySFX("enemyHit");
+            TakeDamage();
+        }
+        else if (other.CompareTag("Explosion") && !isInvincible)
+        {
+            AudioManager.Instance.PlaySFX("explosionHit");
             TakeDamage();
         }
         else if (other.CompareTag("Gear"))
         {
+            AudioManager.Instance.PlaySFX("bonus");
             gameManager.AddGears(1);
             Destroy(other.gameObject);
         }
         else if (other.CompareTag("Exit"))
         {
+            gameManager.AddScore(250);
+            AudioManager.Instance.PlaySFX("newLevel");
             Destroy(other.gameObject);
             gameManager.OnPlayerFoundExit();
         }
@@ -115,6 +124,7 @@ public class PlayerController : MonoBehaviour
         gameManager.UpdateUI();
         if (currentLives <= 0)
         {
+            AudioManager.Instance.PlaySFX("endGame");
             gameManager.GameOver();
             Destroy(gameObject);
         }
@@ -204,6 +214,7 @@ public class PlayerController : MonoBehaviour
 
         Vector3 spawnPos = new Vector3(gridPosition.x, gridPosition.y, 0);
         GameObject bombObj = Instantiate(bombPrefab, spawnPos, Quaternion.identity);
+        AudioManager.Instance.PlaySFX("bomb");
 
         Bomb bombScript = bombObj.GetComponent<Bomb>();
         if (bombScript != null)

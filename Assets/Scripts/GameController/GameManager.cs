@@ -68,6 +68,7 @@ public class GameManager : MonoBehaviour
     {
         PlayerController player = FindObjectOfType<PlayerController>();
         if (player == null) return;
+        AudioManager.Instance.PlaySFX("bonus");
 
         switch (bonus)
         {
