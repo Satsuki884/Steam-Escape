@@ -12,6 +12,9 @@ public class Bomb : MonoBehaviour
     private PlayerController owner;
     private int bombRange = 1;
 
+    private Renderer bombRenderer;
+    private Color originalColor;
+
     public void SetOwner(PlayerController player)
     {
         owner = player;
@@ -27,13 +30,55 @@ public class Bomb : MonoBehaviour
         mapGen = FindObjectOfType<LevelGenerator>();
         gameManager = FindObjectOfType<GameManager>();
 
+        bombRenderer = GetComponentInChildren<Renderer>();
+        if (bombRenderer != null)
+        {
+            originalColor = bombRenderer.material.color;
+        }
+
         StartCoroutine(Countdown());
+        StartCoroutine(Pulsate());
     }
 
     IEnumerator Countdown()
     {
-        yield return new WaitForSeconds(fuseTime);
+        yield return new WaitForSeconds(fuseTime - 1f);
+        StartCoroutine(ChangeColorToRed());
+
+        yield return new WaitForSeconds(1f);
         Explode();
+    }
+
+    IEnumerator Pulsate()
+    {
+        float time = 0f;
+        Vector3 baseScale = transform.localScale;
+
+        while (true)
+        {
+            time += Time.deltaTime * 5f;
+            float scale = 1f + Mathf.Sin(time) * 0.1f;
+            transform.localScale = baseScale * scale;
+            yield return null;
+        }
+    }
+
+    IEnumerator ChangeColorToRed()
+    {
+        if (bombRenderer == null) yield break;
+
+        float duration = 1f;
+        float elapsed = 0f;
+        Color targetColor = Color.red;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            bombRenderer.material.color = Color.Lerp(originalColor, targetColor, elapsed / duration);
+            yield return null;
+        }
+
+        bombRenderer.material.color = targetColor;
     }
 
     void Explode()
