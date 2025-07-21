@@ -140,18 +140,18 @@ public class GameManager : MonoBehaviour
         uiManager.ShowGameOver(score);
         SaveData.Instance.AddGears(gears);
         SaveData.Instance.SetScore(score);
-        SubmitScoreToLeaderboard();
+        // SubmitScoreToLeaderboard();
     }
 
-    private void SubmitScoreToLeaderboard()
-    {
-        StartCoroutine(SubmitScoreCoroutine());
-    }
+    // private void SubmitScoreToLeaderboard()
+    // {
+    //     StartCoroutine(SubmitScoreCoroutine());
+    // }
 
-    private IEnumerator SubmitScoreCoroutine()
-    {
-        yield return leaderboardManager.UpdateScore(score);
-    }
+    // private IEnumerator SubmitScoreCoroutine()
+    // {
+    //     yield return leaderboardManager.UpdateScore(score);
+    // }
 
 
     public void UpdateUI()

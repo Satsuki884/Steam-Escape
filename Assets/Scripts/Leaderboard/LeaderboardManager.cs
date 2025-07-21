@@ -142,37 +142,36 @@ public class LeaderboardManager : MonoBehaviour
             else
                 targetText.text = "-. - -";
         }
+        else
+        {
+            targetText.text = $"-. ME — {saveData.GetScore()}";
+        }
     }
 
-    public IEnumerator CheckUsernameExists(string username, System.Action<bool> callback)
+    public IEnumerator CheckUsernameExists(string username, System.Action<bool?, bool> callback)
     {
         username = username.ToUpper();
         string url = $"{supabaseUrl}/rest/v1/scores?select=username&username=eq.{username}";
         UnityWebRequest request = UnityWebRequest.Get(url);
         request.SetRequestHeader("apikey", supabaseKey);
         request.SetRequestHeader("Authorization", "Bearer " + supabaseKey);
+        request.timeout = 5;
 
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)
         {
             string json = request.downloadHandler.text;
-
-            if (!string.IsNullOrEmpty(json) && json != "[]")
-            {
-                callback(true);
-            }
-            else
-            {
-                callback(false);
-            }
+            bool exists = !string.IsNullOrEmpty(json) && json != "[]";
+            callback(exists, true); // true = запрос успешен
         }
         else
         {
             Debug.LogError("CheckUsernameExists error: " + request.error);
-            callback(true); // Лучше заблокировать регистрацию при ошибке
+            callback(null, false); // false = ошибка
         }
     }
+
     public void InitializePlayerAccount()
     {
         Debug.Log("Initializing player account...");
@@ -189,16 +188,41 @@ public class LeaderboardManager : MonoBehaviour
     {
         Debug.Log("Generating unique username...");
         string username = "";
-        bool exists = true;
+        bool? exists = null;    // nullable bool, null = ошибка
+        bool requestSuccess = false;
+        int attempts = 0;
+        int maxAttempts = 5;    // лимит попыток на случай ошибок
 
-        while (exists)
+        while ((exists != false) && attempts < maxAttempts)
         {
             username = $"Player_{Random.Range(1000, 9999)}";
-            yield return CheckUsernameExists(username, result => exists = result);
+
+            // вызываем запрос и ждём ответа
+            yield return CheckUsernameExists(username, (existsResult, success) =>
+            {
+                exists = existsResult;
+                requestSuccess = success;
+            });
+
+            if (!requestSuccess)
+            {
+                Debug.LogWarning("Ошибка проверки имени. Прерываем создание аккаунта.");
+                yield break; // выходим из корутины без создания имени
+            }
+
             Debug.Log($"Generated username: {username}, exists: {exists}");
+
+            attempts++;
+        }
+
+        if (exists == true)
+        {
+            Debug.LogWarning("Не удалось сгенерировать уникальное имя за " + maxAttempts + " попыток.");
+            yield break;
         }
 
         Debug.Log($"Unique username generated: {username}");
+
         // Сохраняем имя
         PlayerPrefs.SetString("player_name", username);
         PlayerPrefs.Save();
@@ -206,12 +230,12 @@ public class LeaderboardManager : MonoBehaviour
         saveData.SetUsername(username);
         saveData.AddGears(0);
 
-
         // Отправляем на сервер с нулевым счётом
-        yield return SubmitScore(0);
+        yield return SubmitScore(saveData.GetScore());
 
         Debug.Log($"Создан новый игрок: {username}");
     }
+
 
 }
 

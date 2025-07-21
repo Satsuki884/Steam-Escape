@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class SaveData : MonoBehaviour
@@ -61,5 +62,32 @@ public class SaveData : MonoBehaviour
             Debug.Log("Setting username: " + username);
             _playerDataSO.PlayerData.Username = username;
         }
+    }
+
+    public void SetScore(int score)
+    {
+        if (_playerDataSO != null)
+        {
+            if (score >= _playerDataSO.PlayerData.Score)
+            {
+                _playerDataSO.PlayerData.Score = score;
+                SubmitScoreToLeaderboard(score);
+            }
+        }
+    }
+
+    private void SubmitScoreToLeaderboard(int score)
+    {
+        StartCoroutine(SubmitScoreCoroutine(score));
+    }
+
+    private IEnumerator SubmitScoreCoroutine(int score)
+    {
+        yield return LeaderboardManager.Instance.UpdateScore(score);
+    }
+
+    public int GetScore()
+    {
+        return _playerDataSO?.PlayerData.Score ?? 0;
     }
 }
