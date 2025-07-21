@@ -25,6 +25,8 @@ public class LevelGenerator : MonoBehaviour
     private Dictionary<Vector2Int, GameObject> hiddenObjects = new Dictionary<Vector2Int, GameObject>();
     public Dictionary<Vector2Int, GameObject> HiddenObjects => hiddenObjects;
 
+    private HashSet<Vector2Int> occupiedHiddenPositions = new HashSet<Vector2Int>();
+
 
     void Start()
     {
@@ -34,6 +36,7 @@ public class LevelGenerator : MonoBehaviour
 
     public void GenerateMap()
     {
+        occupiedHiddenPositions.Clear();
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy"))
         {
             Destroy(enemy);
@@ -101,7 +104,7 @@ public class LevelGenerator : MonoBehaviour
                 }
             }
         }
-        
+
         SpawnEnemies();
         SpawnExit();
         SpawnGearsAndBonuses();
@@ -127,6 +130,7 @@ public class LevelGenerator : MonoBehaviour
         {
             Vector2Int pos = availablePositions[i];
 
+            // Удаляем окружающие разрушимые блоки
             foreach (Vector2Int adj in GetSurroundingPositions(pos))
             {
                 if (IsDestructible(adj))
@@ -137,8 +141,12 @@ public class LevelGenerator : MonoBehaviour
 
             GameObject prefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Count)];
             Instantiate(prefab, new Vector3(pos.x, pos.y, 0), Quaternion.identity, transform);
+
+            // Помечаем как занято
+            occupiedHiddenPositions.Add(pos);
         }
     }
+
 
 
     int ManhattanDistance(Vector2Int a, Vector2Int b)
@@ -166,9 +174,6 @@ public class LevelGenerator : MonoBehaviour
 
         return positions;
     }
-
-
-
     void SpawnGearsAndBonuses()
     {
         List<Vector2Int> availablePositions = new List<Vector2Int>(destructiblePositions);
@@ -176,24 +181,37 @@ public class LevelGenerator : MonoBehaviour
 
         int totalGears = Random.Range(2, 6);
         int totalBonuses = Random.Range(2, 6);
-        int index = 0;
+        int gearsPlaced = 0;
+        int bonusesPlaced = 0;
 
-        for (int i = 0; i < totalGears && index < availablePositions.Count; i++, index++)
+        foreach (Vector2Int pos in availablePositions)
         {
-            Vector2Int pos = availablePositions[index];
-            GameObject gear = Instantiate(gearPrefab, new Vector3(pos.x, pos.y, 0), Quaternion.identity, transform);
-            gear.SetActive(false);
-            hiddenObjects[pos] = gear;
-        }
+            if (hiddenObjects.ContainsKey(pos) || occupiedHiddenPositions.Contains(pos))
+                continue;
 
-        for (int i = 0; i < totalBonuses && index < availablePositions.Count; i++, index++)
-        {
-            Vector2Int pos = availablePositions[index];
-            GameObject bonus = Instantiate(bonusPrefabs[Random.Range(0, bonusPrefabs.Count)], new Vector3(pos.x, pos.y, 0), Quaternion.identity, transform);
-            bonus.SetActive(false);
-            hiddenObjects[pos] = bonus;
+            if (gearsPlaced < totalGears)
+            {
+                GameObject gear = Instantiate(gearPrefab, new Vector3(pos.x, pos.y, 0), Quaternion.identity, transform);
+                gear.SetActive(false);
+                hiddenObjects[pos] = gear;
+                occupiedHiddenPositions.Add(pos);
+                gearsPlaced++;
+            }
+            else if (bonusesPlaced < totalBonuses)
+            {
+                GameObject bonus = Instantiate(bonusPrefabs[Random.Range(0, bonusPrefabs.Count)], new Vector3(pos.x, pos.y, 0), Quaternion.identity, transform);
+                bonus.SetActive(false);
+                hiddenObjects[pos] = bonus;
+                occupiedHiddenPositions.Add(pos);
+                bonusesPlaced++;
+            }
+
+            if (gearsPlaced >= totalGears && bonusesPlaced >= totalBonuses)
+                break;
         }
     }
+
+
 
 
     void ShuffleList<T>(List<T> list)
@@ -207,17 +225,24 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-
     void SpawnExit()
     {
-        if (destructiblePositions.Count == 0) return;
+        List<Vector2Int> shuffled = new List<Vector2Int>(destructiblePositions);
+        ShuffleList(shuffled);
 
-        exitPosition = destructiblePositions[Random.Range(0, destructiblePositions.Count)];
-        GameObject exitGO = Instantiate(exitPrefab, new Vector3(exitPosition.x, exitPosition.y, 0), Quaternion.identity, transform);
-        exitGO.SetActive(false);
-        hiddenObjects[exitPosition] = exitGO;
+        foreach (Vector2Int pos in shuffled)
+        {
+            if (!hiddenObjects.ContainsKey(pos) && !occupiedHiddenPositions.Contains(pos))
+            {
+                exitPosition = pos;
+                GameObject exitGO = Instantiate(exitPrefab, new Vector3(pos.x, pos.y, 0), Quaternion.identity, transform);
+                exitGO.SetActive(false);
+                hiddenObjects[pos] = exitGO;
+                occupiedHiddenPositions.Add(pos);
+                break;
+            }
+        }
     }
-
 
 
     public void OnDestructibleDestroyed(Vector2Int pos)

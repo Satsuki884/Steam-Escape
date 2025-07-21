@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Bomb : MonoBehaviour
 {
-    [SerializeField] private float fuseTime = 3f;
+    [SerializeField] private float fuseTime = 4f;
     [SerializeField] private GameObject explosionPrefab;
 
     private LevelGenerator mapGen;
@@ -42,10 +42,10 @@ public class Bomb : MonoBehaviour
 
     IEnumerator Countdown()
     {
-        yield return new WaitForSeconds(fuseTime/2f);
+        yield return new WaitForSeconds(fuseTime/2f+fuseTime/4f);
         StartCoroutine(ChangeColorToRed());
 
-        yield return new WaitForSeconds(fuseTime/2f);
+        yield return new WaitForSeconds(fuseTime/4f);
         Explode();
     }
 

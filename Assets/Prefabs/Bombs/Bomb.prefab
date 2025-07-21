@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbf1779669159d54d8577f1279012c74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fuseTime: 2
+  fuseTime: 4
   explosionPrefab: {fileID: 6020769748189453126, guid: b881b822619afb646bd1e2e1a2b1cfd9, type: 3}
 --- !u!135 &8821769092561340026
 SphereCollider:
