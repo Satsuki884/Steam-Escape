@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.google.external-dependency-manager": "https://github.com/googlesamples/unity-jar-resolver.git?path=upm",
     "com.unity.collab-proxy": "2.8.2",
     "com.unity.feature.development": "1.0.1",
     "com.unity.textmeshpro": "3.0.6",
