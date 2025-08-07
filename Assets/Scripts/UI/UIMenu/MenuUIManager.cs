@@ -68,6 +68,7 @@ public class MenuUIManager : MonoBehaviour
         if (webViewObject != null)
         {
             webViewObject.SetVisibility(true);
+            Screen.orientation = ScreenOrientation.Portrait;
         }
     }
 
@@ -78,6 +79,7 @@ public class MenuUIManager : MonoBehaviour
         if (webViewObject != null)
         {
             webViewObject.SetVisibility(false);
+            Screen.orientation = ScreenOrientation.LandscapeLeft;
         }
     }
 
