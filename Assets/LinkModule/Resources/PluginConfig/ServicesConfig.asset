@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65d984bd2fd1489fb9cd7513e06aa5ff, type: 3}
+  m_Name: ServicesConfig
+  m_EditorClassIdentifier: 
+  isTest: 1
+  showLoadingState: 0
+  runGame: 1
+  testUrl: https://firefliesanddarkness.xyz/policy.php
+  decodeInstallReferrer: 0
+  installReferrerDecodeUrl: https://monkeyforestquests.xyz/fb_dwefe.php
+  domain: https://pixelmazerush.xyz
+  appsFlyerDevKey: C4aAtzhicDPMg45J7rMxa3
+  appsFlyerAppId: 
+  enableSafeArea: 1
+  orientationInGame: 3
+  autorotateToLandscapeLeft: 1
+  autorotateToLandscapeRight: 0
+  autorotateToPortrait: 0
+  autorotateToPortraitUpsideDown: 0
+  randomizedKeysInUrl: 1
+  sub_id_1_Key: fazu
+  ad_id_Key: ad_id
+  push_token_Key: loloma
+  deviceID_Key: hyperrein
+  campaign_group_name_ref_Key: campaign_group_name_ref
+  ad_id_ref_Key: ad_id_ref
+  ad_objective_name_ref_Key: ad_objective_name_ref
+  adgroup_id_ref_Key: adgroup_id_ref
+  adgroup_name_ref_Key: adgroup_name_ref
+  campaign_id_ref_Key: campaign_id_ref
+  campaign_name_ref_Key: campaign_name_ref
+  campaign_group_id_ref_Key: campaign_group_id_ref
+  account_id_ref_Key: account_id_ref
+  is_instagram_ref_Key: is_instagram_ref
+  is_an_ref_Key: is_an_ref
+  publisher_platform_ref_Key: publisher_platform_ref
+  platform_position_ref_Key: platform_position_ref
+  naming_Key: remakireos
+  loadingScene: {fileID: 102900000, guid: c91a7752ec5bc7649b836f7dfcf69ed8, type: 3}
