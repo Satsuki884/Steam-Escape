@@ -64,7 +64,6 @@ public class MenuUIManager : MonoBehaviour
     void OnInfoClicked()
     {
         infoPanel.SetActive(true);
-
         // if (webViewObject != null)
         // {
         //     webViewObject.SetVisibility(true);
@@ -74,7 +73,6 @@ public class MenuUIManager : MonoBehaviour
     void OnInfoCloseClicked()
     {
         infoPanel.SetActive(false);
-
         // if (webViewObject != null)
         // {
         //     webViewObject.SetVisibility(false);
