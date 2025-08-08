@@ -13,23 +13,19 @@ MonoBehaviour:
   m_Name: ServicesConfig
   m_EditorClassIdentifier: 
   isTest: 1
-  showLoadingState: 0
-  runGame: 0
-  testUrl: 'https://firefliesanddarkness.xyz/policy.php '
+  showLoadingState: 1
+  runGame: 1
+  testUrl: 'https://https://pixelmazerush.xyz/policy.php '
   decodeInstallReferrer: 0
   installReferrerDecodeUrl: https://monkeyforestquests.xyz/fb_dwefe.php
   domain: 
   appsFlyerDevKey: C4aAtzhicDPMg45J7rMxa3
   appsFlyerAppId: 
-  enableSafeArea: 0
-  orientationInGame: 5
+  enableSafeArea: 1
+  orientationInGame: 3
   autorotateToLandscapeLeft: 1
-  autorotateToLandscapeRight: 1
-  autorotateToPortrait: 1
-  autorotateToPortraitUpsideDown: 1
-  randomizedKeysInUrl: 0
-  sub_id_1_Key: sub_id_1
-  ad_id_Key: ad_id
-  push_token_Key: push_token
-  deviceID_Key: deviceID
+  autorotateToLandscapeRight: 0
+  autorotateToPortrait: 0
+  autorotateToPortraitUpsideDown: 0
+  randomizedKeysInUrl: 1
   loadingScene: {fileID: 102900000, guid: c91a7752ec5bc7649b836f7dfcf69ed8, type: 3}
