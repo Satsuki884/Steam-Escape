@@ -29,97 +29,167 @@ public class ShopManager : MonoBehaviour
 
     private void RefreshShop()
     {
+        ClearShop();
+        PopulateShop(shopConfig.playerColors, playerColorsParent, true);
+        PopulateShop(shopConfig.explosionColors, explosionColorsParent, false);
+    }
+
+    private void ClearShop()
+    {
         foreach (Transform child in playerColorsParent) Destroy(child.gameObject);
         foreach (Transform child in explosionColorsParent) Destroy(child.gameObject);
+    }
 
-        foreach (var item in shopConfig.playerColors)
+    private void PopulateShop(List<ColorItem> colorItems, Transform parent, bool isPlayer)
+    {
+        foreach (var item in colorItems)
         {
-            string label = GetLabelForColor(item.Color, item.Id, item.Price, isPlayer: true);
-            var ui = Instantiate(colorItemPrefab, playerColorsParent);
-            ui.Init(item.Id, item.Color, label, (id) => OnColorClicked(id, true));
-        }
+            var owned = GetOwnedColors(isPlayer);
+            string currentId = GetCurrentColorId(isPlayer);
+            bool isUsed = currentId == item.Id;
+            bool isOwned = owned.Contains(item.Id);
+            bool canAfford = playerDataSO.GetGears() >= item.Price;
 
-        // explosion colors
-        foreach (var item in shopConfig.explosionColors)
-        {
-            string label = GetLabelForColor(item.Color, item.Id, item.Price, isPlayer: false);
-            var ui = Instantiate(colorItemPrefab, explosionColorsParent);
-            ui.Init(item.Id, item.Color, label, (id) => OnColorClicked(id, false));
+            var ui = Instantiate(colorItemPrefab, parent);
+
+            bool canBuy = !isOwned && canAfford;
+            bool canUse = isOwned && !isUsed;
+
+            if (isUsed)
+                canUse = true;
+
+            string buyLabel = canBuy ? $"{item.Price} G" : "Not enough";
+
+            ui.Init(
+                item.Id,
+                item.Color,
+                buyLabel,
+                id => OnBuyClicked(id, isPlayer),
+                id => OnUseClicked(id, isPlayer),
+                canBuy,
+                canUse,
+                isUsed
+            );
         }
     }
 
-    private List<string> GetOwnedColors(bool isPlayer)
+    private void OnUseClicked(string colorId, bool isPlayer)
     {
-        return isPlayer ? playerDataSO.GetOwnedSkinColors() : playerDataSO.GetOwnedExplosionColors();
-    }
-
-    private string GetCurrentColorId(bool isPlayer)
-    {
-        return isPlayer ? playerDataSO.GetPlayerColorId() : playerDataSO.GetExplosionColorId();
-    }
-
-    private string GetLabelForColor(Color color, string colorId, int price, bool isPlayer)
-    {
-        var owned = GetOwnedColors(isPlayer);
-        string currentId = GetCurrentColorId(isPlayer);
-
-        if (owned.Contains(colorId))
-        {
-            return (colorId == currentId) ? "USED" : "OWNED";
-        }
+        if (isPlayer)
+            playerDataSO.SetPlayerColorId(colorId);
         else
-        {
-            return price.ToString();
-        }
+            playerDataSO.SetExplosionColorId(colorId);
+
+        playerDataSO.SaveToJson();
+        UpdateGearsText();
+        RefreshShop();
+        Canvas.ForceUpdateCanvases();
     }
 
-    private void OnColorClicked(string colorId, bool isPlayer)
+    private void OnBuyClicked(string colorId, bool isPlayer)
     {
-        var owned = GetOwnedColors(isPlayer);
         var colorItem = isPlayer
             ? shopConfig.playerColors.FirstOrDefault(c => c.Id == colorId)
             : shopConfig.explosionColors.FirstOrDefault(c => c.Id == colorId);
 
         if (colorItem == null) return;
 
-        if (owned.Contains(colorId))
+        if (playerDataSO.GetGears() < colorItem.Price)
         {
-            // Просто выбираем
-            if (isPlayer)
-                playerDataSO.SetPlayerColorId(colorId);
-            else
-                playerDataSO.SetExplosionColorId(colorId);
-
-            playerDataSO.SaveToJson();
+            Debug.Log("Not enough funds!");
+            return;
         }
+
+        playerDataSO.TakeAwayGears(colorItem.Price);
+
+        if (isPlayer)
+            playerDataSO.AddToSkinOwnedColor(colorId);
         else
-        {
-            // Покупка
-            if (playerDataSO.GetGears() >= colorItem.Price)
-            {
-                playerDataSO.TakeAwayGears(colorItem.Price);
+            playerDataSO.AddToExplosionOwnedColor(colorId);
 
-                if (isPlayer)
-                    playerDataSO.AddToSkinOwnedColor(colorId);
-                else
-                    playerDataSO.AddToExplosionOwnedColor(colorId);
+        if (isPlayer)
+            playerDataSO.SetPlayerColorId(colorId);
+        else
+            playerDataSO.SetExplosionColorId(colorId);
 
-                if (isPlayer)
-                    playerDataSO.SetPlayerColorId(colorId);
-                else
-                    playerDataSO.SetExplosionColorId(colorId);
+        playerDataSO.SaveToJson();
+        UpdateGearsText();
+        RefreshShop();
+        Canvas.ForceUpdateCanvases();
+    }
 
-                playerDataSO.SaveToJson();
-            }
-            else
-            {
-                Debug.Log("Not enough funds!");
-                return;
-            }
-        }
+
+    private List<string> GetOwnedColors(bool isPlayer) =>
+        isPlayer ? playerDataSO.GetOwnedSkinColors() : playerDataSO.GetOwnedExplosionColors();
+
+    private string GetCurrentColorId(bool isPlayer) =>
+        isPlayer ? playerDataSO.GetPlayerColorId() : playerDataSO.GetExplosionColorId();
+
+    private string GetLabelForColor(string colorId, int price, bool isPlayer)
+    {
+        var owned = GetOwnedColors(isPlayer);
+        string currentId = GetCurrentColorId(isPlayer);
+
+        if (owned.Contains(colorId))
+            return (colorId == currentId) ? "USED" : "USE";
+
+        if (playerDataSO.GetGears() < price)
+            return "Not enough";
+
+        return price.ToString();
+    }
+
+    private void OnColorClicked(string colorId, bool isPlayer)
+    {
+        if (TrySelectOwnedColor(colorId, isPlayer)) return;
+        TryPurchaseColor(colorId, isPlayer);
 
         UpdateGearsText();
         RefreshShop();
+        Canvas.ForceUpdateCanvases();
+    }
+
+    private bool TrySelectOwnedColor(string colorId, bool isPlayer)
+    {
+        var owned = GetOwnedColors(isPlayer);
+        if (!owned.Contains(colorId)) return false;
+
+        if (isPlayer)
+            playerDataSO.SetPlayerColorId(colorId);
+        else
+            playerDataSO.SetExplosionColorId(colorId);
+
+        playerDataSO.SaveToJson();
+        return true;
+    }
+
+    private void TryPurchaseColor(string colorId, bool isPlayer)
+    {
+        var colorItem = isPlayer
+            ? shopConfig.playerColors.FirstOrDefault(c => c.Id == colorId)
+            : shopConfig.explosionColors.FirstOrDefault(c => c.Id == colorId);
+
+        if (colorItem == null) return;
+
+        if (playerDataSO.GetGears() < colorItem.Price)
+        {
+            Debug.Log("Not enough funds!");
+            return;
+        }
+
+        playerDataSO.TakeAwayGears(colorItem.Price);
+
+        if (isPlayer)
+            playerDataSO.AddToSkinOwnedColor(colorId);
+        else
+            playerDataSO.AddToExplosionOwnedColor(colorId);
+
+        if (isPlayer)
+            playerDataSO.SetPlayerColorId(colorId);
+        else
+            playerDataSO.SetExplosionColorId(colorId);
+
+        playerDataSO.SaveToJson();
     }
 
 

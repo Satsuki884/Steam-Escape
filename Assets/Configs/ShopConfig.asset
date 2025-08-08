@@ -14,30 +14,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerColors:
   - id: player_green
-    color: {r: 0.2516465, g: 0.8207547, b: 0.47266266, a: 0}
+    color: {r: 0.2516465, g: 0.8207547, b: 0.47266266, a: 1}
     price: 0
   - id: player_orange
-    color: {r: 1, g: 0.6474906, b: 0.4198113, a: 0}
+    color: {r: 1, g: 0.6474906, b: 0.4198113, a: 1}
     price: 25
   - id: player_pink
-    color: {r: 1, g: 0.5707547, b: 0.95335424, a: 0}
-    price: 50
+    color: {r: 1, g: 0.5707547, b: 0.95335424, a: 1}
+    price: 1
   - id: player_purple
-    color: {r: 0.69978565, g: 0.32858673, b: 0.9811321, a: 0}
+    color: {r: 0.69978565, g: 0.32858673, b: 0.9811321, a: 1}
     price: 75
   - id: player_blue
-    color: {r: 0.20198467, g: 0.2724214, b: 0.8396226, a: 0}
+    color: {r: 0.20198467, g: 0.2724214, b: 0.8396226, a: 1}
     price: 100
   explosionColors:
   - id: explosion_orange
-    color: {r: 0.64705884, g: 0.427451, b: 0.21960786, a: 0}
+    color: {r: 0.9150943, g: 0.55805385, b: 0.22014059, a: 1}
     price: 0
   - id: explosion_yellow
-    color: {r: 1, g: 1, b: 0, a: 0}
+    color: {r: 1, g: 1, b: 0, a: 1}
     price: 25
   - id: explosion_green
-    color: {r: 0.42631495, g: 0.9716981, b: 0.3987629, a: 0}
+    color: {r: 0.42631495, g: 0.9716981, b: 0.3987629, a: 1}
     price: 50
-  - id: explosion_blue
-    color: {r: 0.9528302, g: 0.31910825, b: 0.33712888, a: 0}
-    price: 75
+  - id: explosion_red
+    color: {r: 0.9528302, g: 0.31910825, b: 0.33712888, a: 1}
+    price: 1
