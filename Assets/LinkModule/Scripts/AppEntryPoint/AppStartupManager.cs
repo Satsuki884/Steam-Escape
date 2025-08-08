@@ -9,8 +9,10 @@ using LinkModule.Scripts.NetworkService;
 using LinkModule.Scripts.WebViewService;
 using TitanModulePackage.Scripts.SaveService;
 
-#if USE_FACEBOOK_SDK || USE_APPSFLYER_SDK || USE_INSTALL_REFERRER
+#if USE_FACEBOOK_SDK
 using Facebook.Unity;
+#endif
+#if USE_FACEBOOK_SDK || USE_APPSFLYER_SDK || USE_INSTALL_REFERRER
 using LinkModule.Scripts.DeepLinkService;
 using LinkModule.Scripts.AdService;
 #endif

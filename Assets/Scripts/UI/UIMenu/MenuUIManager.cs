@@ -22,7 +22,7 @@ public class MenuUIManager : MonoBehaviour
     [SerializeField] private Button closeSettingsButton;
     [SerializeField] private Button exitButton;
 
-    private WebViewObject webViewObject;
+    // private WebViewObject webViewObject;
 
     void Start()
     {
@@ -39,16 +39,16 @@ public class MenuUIManager : MonoBehaviour
         closeSettingsButton.onClick.AddListener(() => settingsPanel.SetActive(false));
         exitButton.onClick.AddListener(OnExitClicked);
 
-        webViewObject = FindObjectOfType<WebViewObject>();
-
-        if (webViewObject != null)
-        {
-            webViewObject.SetVisibility(false);
-        }
-        else
-        {
-            Debug.LogWarning("WebViewObject не найден в сцене");
-        }
+        // webViewObject = FindObjectOfType<WebViewObject>();
+        //
+        // if (webViewObject != null)
+        // {
+        //     webViewObject.SetVisibility(false);
+        // }
+        // else
+        // {
+        //     Debug.LogWarning("WebViewObject не найден в сцене");
+        // }
         infoPanel.SetActive(false);
         rulesPanel.SetActive(false);
         shopPanel.SetActive(false);
@@ -65,20 +65,20 @@ public class MenuUIManager : MonoBehaviour
     {
         infoPanel.SetActive(true);
 
-        if (webViewObject != null)
-        {
-            webViewObject.SetVisibility(true);
-        }
+        // if (webViewObject != null)
+        // {
+        //     webViewObject.SetVisibility(true);
+        // }
     }
 
     void OnInfoCloseClicked()
     {
         infoPanel.SetActive(false);
 
-        if (webViewObject != null)
-        {
-            webViewObject.SetVisibility(false);
-        }
+        // if (webViewObject != null)
+        // {
+        //     webViewObject.SetVisibility(false);
+        // }
     }
 
     void OnExitClicked()
