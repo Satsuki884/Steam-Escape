@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "appsflyer-unity-plugin": {
+      "version": "https://github.com/AppsFlyerSDK/appsflyer-unity-plugin.git#Strict-upm",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "49e1817319940f14ee28520c65f90d9b093560ac"
+    },
     "com.google.external-dependency-manager": {
       "version": "https://github.com/googlesamples/unity-jar-resolver.git?path=upm",
       "depth": 0,

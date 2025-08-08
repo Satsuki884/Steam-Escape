@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65d984bd2fd1489fb9cd7513e06aa5ff, type: 3}
+  m_Name: ServicesConfig
+  m_EditorClassIdentifier: 
+  isTest: 1
+  showLoadingState: 0
+  runGame: 0
+  testUrl: 'https://firefliesanddarkness.xyz/policy.php '
+  decodeInstallReferrer: 0
+  installReferrerDecodeUrl: https://monkeyforestquests.xyz/fb_dwefe.php
+  domain: 
+  appsFlyerDevKey: C4aAtzhicDPMg45J7rMxa3
+  appsFlyerAppId: 
+  enableSafeArea: 0
+  orientationInGame: 5
+  autorotateToLandscapeLeft: 1
+  autorotateToLandscapeRight: 1
+  autorotateToPortrait: 1
+  autorotateToPortraitUpsideDown: 1
+  randomizedKeysInUrl: 0
+  sub_id_1_Key: sub_id_1
+  ad_id_Key: ad_id
+  push_token_Key: push_token
+  deviceID_Key: deviceID
+  loadingScene: {fileID: 102900000, guid: c91a7752ec5bc7649b836f7dfcf69ed8, type: 3}

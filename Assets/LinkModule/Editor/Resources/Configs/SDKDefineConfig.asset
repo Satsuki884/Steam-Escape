@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b1158ca5c4d46ac86276f8a2d7b016f, type: 3}
+  m_Name: SDKDefineConfig
+  m_EditorClassIdentifier: 
+  sdkList:
+  - defineSymbol: USE_FACEBOOK_SDK
+    displayName: Facebook SDK
+    typeNameToCheck: Facebook.Unity.FB
+    optionalAssemblyName: 
+  - defineSymbol: USE_FIREBASE_SDK
+    displayName: Firebase SDK
+    typeNameToCheck: Firebase.Messaging.FirebaseMessage
+    optionalAssemblyName: 
+  - defineSymbol: USE_APPSFLYER_SDK
+    displayName: AppsFlyer SDK
+    typeNameToCheck: AppsFlyerSDK.AppsFlyer
+    optionalAssemblyName: 
+  - defineSymbol: USE_UNIWEBVIEW
+    displayName: UniWebView
+    typeNameToCheck: UniWebView
+    optionalAssemblyName: 
+  - defineSymbol: USE_INSTALL_REFERRER
+    displayName: InstallReferrer
+    typeNameToCheck: 
+    optionalAssemblyName: 
