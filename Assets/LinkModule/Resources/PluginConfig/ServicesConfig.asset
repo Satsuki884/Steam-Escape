@@ -25,7 +25,7 @@ MonoBehaviour:
   orientationInGame: 3
   autorotateToLandscapeLeft: 1
   autorotateToLandscapeRight: 0
-  autorotateToPortrait: 0
+  autorotateToPortrait: 1
   autorotateToPortraitUpsideDown: 0
   randomizedKeysInUrl: 1
   loadingScene: {fileID: 102900000, guid: c91a7752ec5bc7649b836f7dfcf69ed8, type: 3}
