@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
@@ -45,7 +46,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-
+        rb.isKinematic = true;
         currentLives = maxLives;
         mapGen = FindObjectOfType<LevelGenerator>();
         gameManager = FindObjectOfType<GameManager>();
@@ -59,10 +60,40 @@ public class PlayerController : MonoBehaviour
             originalColor = meshRenderer.material.color;
     }
 
+    // void Update()
+    // {
+
+    //     if (!canMove) return;
+    //     if (!hasTarget && moveDirection != Vector2Int.zero)
+    //     {
+    //         Vector2Int targetGridPos = gridPosition + moveDirection;
+
+    //         if (!mapGen.IsIndestructible(targetGridPos) && !mapGen.IsDestructible(targetGridPos))
+    //         {
+    //             targetWorldPos = new Vector2(targetGridPos.x, targetGridPos.y);
+    //             hasTarget = true;
+    //             gridPosition = targetGridPos;
+    //         }
+    //     }
+
+    //     if (hasTarget)
+    //     {
+    //         Vector2 currentPos = rb.position;
+    //         Vector2 newPos = Vector2.MoveTowards(currentPos, targetWorldPos, moveSpeed * Time.deltaTime);
+    //         rb.MovePosition(newPos);
+
+    //         if (Vector2.Distance(newPos, targetWorldPos) < 0.01f)
+    //         {
+    //             rb.MovePosition(targetWorldPos);
+    //             hasTarget = false;
+    //         }
+    //     }
+    // }
+
     void Update()
     {
-
         if (!canMove) return;
+
         if (!hasTarget && moveDirection != Vector2Int.zero)
         {
             Vector2Int targetGridPos = gridPosition + moveDirection;
@@ -72,22 +103,22 @@ public class PlayerController : MonoBehaviour
                 targetWorldPos = new Vector2(targetGridPos.x, targetGridPos.y);
                 hasTarget = true;
                 gridPosition = targetGridPos;
-            }
-        }
-
-        if (hasTarget)
-        {
-            Vector2 currentPos = rb.position;
-            Vector2 newPos = Vector2.MoveTowards(currentPos, targetWorldPos, moveSpeed * Time.deltaTime);
-            rb.MovePosition(newPos);
-
-            if (Vector2.Distance(newPos, targetWorldPos) < 0.01f)
-            {
-                rb.MovePosition(targetWorldPos);
-                hasTarget = false;
+                MoveToTarget(targetWorldPos);
             }
         }
     }
+
+    private void MoveToTarget(Vector2 target)
+    {
+        float distance = Vector2.Distance(rb.position, target);
+        float duration = distance / moveSpeed;
+
+        rb.DOMove(target, duration).SetEase(Ease.Linear).OnComplete(() =>
+        {
+            hasTarget = false;
+        });
+    }
+
     private Vector2Int moveDirection = Vector2Int.zero;
 
     private void OnTriggerEnter(Collider other)
