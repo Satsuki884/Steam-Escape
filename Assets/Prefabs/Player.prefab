@@ -53,6 +53,7 @@ MonoBehaviour:
   bombPrefab: {fileID: 839910339006828853, guid: 52ed024f4c24c7449af07dbd5e5db1d2, type: 3}
   bombRange: 1
   meshRenderer: {fileID: 8527885022775098907}
+  shopConfig: {fileID: 11400000, guid: ada31b909ae923947a0c12b12bf0be98, type: 2}
   maxActiveBombs: 1
 --- !u!65 &3388309880395552437
 BoxCollider:

@@ -2,6 +2,8 @@ using System.Collections;
 using UnityEngine;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
+using System.Linq;
 
 public class SaveData : MonoBehaviour
 {
@@ -133,21 +135,38 @@ public class SaveData : MonoBehaviour
 
     public int GetScore() => _playerDataSO?.PlayerData.Score ?? 0;
 
-    public void SetPlayerColor(Color color)
+    public List<string> GetOwnedSkinColors() => _playerDataSO?.PlayerData.OwnedSkinColors ?? new List<string>();
+
+    public void AddToSkinOwnedColor(string colorId)
     {
-        if (_playerDataSO != null)
-            _playerDataSO.PlayerData.PlayerColor = color;
+        if (_playerDataSO != null && !_playerDataSO.PlayerData.OwnedSkinColors.Contains(colorId))
+            _playerDataSO.PlayerData.OwnedSkinColors.Add(colorId);
     }
 
-    public Color GetPlayerColor() => _playerDataSO?.PlayerData.PlayerColor ?? Color.white;
+    public List<string> GetOwnedExplosionColors() => _playerDataSO?.PlayerData.OwnedExplosionColors ?? new List<string>();
 
-    public void SetExplosionColor(int colorIndex)
+    public void AddToExplosionOwnedColor(string colorId)
     {
-        if (_playerDataSO != null)
-            _playerDataSO.PlayerData.ExplosionColor = colorIndex;
+        if (_playerDataSO != null && !_playerDataSO.PlayerData.OwnedExplosionColors.Contains(colorId))
+            _playerDataSO.PlayerData.OwnedExplosionColors.Add(colorId);
     }
 
-    public int GetExplosionColor() => _playerDataSO?.PlayerData.ExplosionColor ?? 0;
+    public string GetPlayerColorId() => _playerDataSO?.PlayerData.PlayerColorId ?? "";
+
+    public void SetPlayerColorId(string colorId)
+    {
+        if (_playerDataSO != null)
+            _playerDataSO.PlayerData.PlayerColorId = colorId;
+    }
+
+    public string GetExplosionColorId() => _playerDataSO?.PlayerData.ExplosionColorId ?? "";
+
+    public void SetExplosionColorId(string colorId)
+    {
+        if (_playerDataSO != null)
+            _playerDataSO.PlayerData.ExplosionColorId = colorId;
+    }
+
     #endregion
 
     #region Leaderboard

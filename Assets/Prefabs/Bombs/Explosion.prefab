@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a64f1f094a9fc1b4ab0a8ebc184bbc20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  explosionRenderer: {fileID: 8386344641191955434}
+  shopConfig: {fileID: 11400000, guid: ada31b909ae923947a0c12b12bf0be98, type: 2}
 --- !u!1 &8407436938843324852
 GameObject:
   m_ObjectHideFlags: 0

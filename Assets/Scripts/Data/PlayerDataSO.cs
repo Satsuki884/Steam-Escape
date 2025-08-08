@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayerDataSO", menuName = "Data/Player Data")]
@@ -30,17 +31,33 @@ public class PlayerData
         set { _score = value; }
     }
 
-    [SerializeField] private Color _playerColor;
-    public Color PlayerColor
+    [SerializeField] private string _playerColorId;
+    public string PlayerColorId
     {
-        get { return _playerColor; }
-        set { _playerColor = value; }
+        get => _playerColorId;
+        set => _playerColorId = value;
     }
 
-    [SerializeField] private int _explosionColor;
-    public int ExplosionColor
+    [SerializeField] private string _explosionColorId;
+    public string ExplosionColorId
     {
-        get { return _explosionColor; }
-        set { _explosionColor = value; }
+        get => _explosionColorId;
+        set => _explosionColorId = value;
     }
+
+    [SerializeField] private List<string> _ownedSkinColors = new List<string>();
+    public List<string> OwnedSkinColors
+    {
+        get => _ownedSkinColors;
+        set => _ownedSkinColors = value;
+    }
+
+    [SerializeField] private List<string> _ownedExplosionColors = new List<string>();
+    public List<string> OwnedExplosionColors
+    {
+        get => _ownedExplosionColors;
+        set => _ownedExplosionColors = value;
+    }
+
+
 }

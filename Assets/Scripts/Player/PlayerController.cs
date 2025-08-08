@@ -39,12 +39,21 @@ public class PlayerController : MonoBehaviour
     private bool isInvincible = false;
 
     [SerializeField] private Renderer meshRenderer;
+    private SaveData saveData;
+    [SerializeField] private ShopConfig shopConfig;
     private Color originalColor;
 
     private bool canMove = true;
 
     void Start()
     {
+
+        saveData = SaveData.Instance;
+        
+        // Установить цвет игрока из сохранения
+        Color playerColor = shopConfig.GetPlayerColorById(saveData.GetPlayerColorId());
+        if (meshRenderer != null)
+            meshRenderer.material.color = playerColor;
 
         currentLives = maxLives;
         mapGen = FindObjectOfType<LevelGenerator>();
