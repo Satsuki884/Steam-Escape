@@ -14,4 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerData:
     _gears: 0
-    _username: 
+    _score: 1300
+    _playerColorId: player_pink
+    _explosionColorId: explosion_orange
+    _ownedSkinColors: []
+    _ownedExplosionColors: []
