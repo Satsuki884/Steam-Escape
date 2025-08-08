@@ -17,12 +17,12 @@ public class PlayerData
         get { return _gears; }
         set { _gears = value; }
     }
-    [SerializeField] private string _username;
-    public string Username
-    {
-        get { return _username; }
-        set { _username = value; }
-    }
+    // [SerializeField] private string _username;
+    // public string Username
+    // {
+    //     get { return _username; }
+    //     set { _username = value; }
+    // }
 
     [SerializeField] private int _score = 0;
     public int Score

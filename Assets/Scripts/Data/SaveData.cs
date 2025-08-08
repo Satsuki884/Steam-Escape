@@ -112,14 +112,14 @@ public class SaveData : MonoBehaviour
         return true;
     }
 
-    public void SetUsername(string username)
-    {
-        if (_playerDataSO != null)
-        {
-            Debug.Log("Setting username: " + username);
-            _playerDataSO.PlayerData.Username = username;
-        }
-    }
+    // public void SetUsername(string username)
+    // {
+    //     if (_playerDataSO != null)
+    //     {
+    //         Debug.Log("Setting username: " + username);
+    //         _playerDataSO.PlayerData.Username = username;
+    //     }
+    // }
 
     public void SetScore(int score)
     {
@@ -169,17 +169,17 @@ public class SaveData : MonoBehaviour
 
     #endregion
 
-    #region Leaderboard
+    // #region Leaderboard
 
-    private void SubmitScoreToLeaderboard(int score)
-    {
-        StartCoroutine(SubmitScoreCoroutine(score));
-    }
+    // private void SubmitScoreToLeaderboard(int score)
+    // {
+    //     StartCoroutine(SubmitScoreCoroutine(score));
+    // }
 
-    private IEnumerator SubmitScoreCoroutine(int score)
-    {
-        yield return LeaderboardManager.Instance.UpdateScore(score);
-    }
+    // private IEnumerator SubmitScoreCoroutine(int score)
+    // {
+    //     yield return LeaderboardManager.Instance.UpdateScore(score);
+    // }
 
-    #endregion
+    // #endregion
 }

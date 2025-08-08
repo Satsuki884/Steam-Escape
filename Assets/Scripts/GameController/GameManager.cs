@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
 
     private bool allEnemiesKilled = false;
 
-    private LeaderboardManager leaderboardManager;
+    // private LeaderboardManager leaderboardManager;
     private SaveData save;
 
     void Start()
@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
         mapGen = FindObjectOfType<LevelGenerator>();
         uiManager = FindObjectOfType<UIManager>();
         save = FindObjectOfType<SaveData>();
-        leaderboardManager = FindObjectOfType<LeaderboardManager>();
+        // leaderboardManager = FindObjectOfType<LeaderboardManager>();
 
         timer = gameTime;
 
