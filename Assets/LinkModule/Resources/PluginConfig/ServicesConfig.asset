@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65d984bd2fd1489fb9cd7513e06aa5ff, type: 3}
   m_Name: ServicesConfig
   m_EditorClassIdentifier: 
-  isTest: 1
+  isTest: 0
   showLoadingState: 0
   runGame: 0
   testUrl: https://firefliesanddarkness.xyz/policy.php
