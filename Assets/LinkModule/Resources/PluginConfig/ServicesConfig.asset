@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isTest: 0
   showLoadingState: 0
-  runGame: 1
+  runGame: 0
   testUrl: https://firefliesanddarkness.xyz/policy.php
   decodeInstallReferrer: 0
   installReferrerDecodeUrl: https://monkeyforestquests.xyz/fb_dwefe.php
